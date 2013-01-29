@@ -1,0 +1,8 @@
+<p>
+  <%= link_to @commenter.name.titleize, "http://#{APP_CONFIG['host']}/" + @commenter.custom_url %> just commented on you post on the <%= link_to @post.group.name, group_url(@post.group) %> page.
+</p>
+
+<p>
+<br/>
+- Your friends at StudyHall
+</p>

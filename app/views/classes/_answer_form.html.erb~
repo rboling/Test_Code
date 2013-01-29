@@ -1,0 +1,21 @@
+<%= form_for answer, :url => '/classes/create_answers/#{@class.id}', :remote => true, :html => {:class => "form-stacked", :id => "answer_form_button_herere"} do |f| %>
+  <div class="user_photo left">
+      <%= link_to image_tag(current_user.photo_url(:medium)), current_user %>
+  </div>
+  <%if question_type == 'group' %>
+    <%= hidden_field_tag 'question_type', 'group' %>
+    <%= hidden_field_tag 'group_id', group_id %>
+  <%else%>
+    <%= hidden_field_tag 'question_type', 'class' %>
+    <%= hidden_field_tag 'class_id', class_id %>
+  <%end%>
+
+  <%= f.hidden_field :parent_id %>
+  <div class="clearfix">
+    <%= f.label :text, "Your Answers" %>
+    <div class="input"><%= f.text_area :text, :rows => 2 %></div>
+  </div>
+  <div class="clearfix">
+    <%= f.submit "Answer", :class => "btn primary" %>
+  </div>
+<% end %>

@@ -1,0 +1,40 @@
+<% if @user.activity.any? %>
+  <% @activities.each do |message| %>
+    <li class="activity_message">
+      <div id="message-section" style="font-size: 10px;">
+      <% if message.activist == current_user %>
+        <div id="delete_activity_section" style="font-size: 10px; display: none;">
+        <%= link_to "x", "/users/delete_activity/#{message.id}", :method => "post", :remote => true, :id => "delete_activity_button" %>
+        </div>
+      <% else %>
+
+        <div id="delete_activity_section" style="font-size: 10px; display: none;">
+        <%= link_to "hide", "/users/hide_activity/#{message.id}", :method => "post", :remote => true, :id => "hide_activity_button" %>
+        </div>
+        
+      <% end %>
+
+        <%= link_to image_tag(message.activist.photo_url(:medium)), message.activist, title: message.activist.title_name if message.activist %>
+        <%= message.body.html_safe %>
+      </div>
+      <div class="time"><%= time_ago_in_words message.created_at %> ago</div>
+      <div id="share-section" style="display: none; font-size: 10px;">
+      <%= link_to "Share!", "/users/share_activity/#{message.id}", :method => "post", :remote => true, :id => "like_button" %>
+      </div>
+
+      <div id="like-section" style="display: none;">
+        <%= link_to image_tag('/assets/like.png'), "/users/increase_like/#{message.id}", :method => "post", :remote => true, :id => "like_button" %>
+       <div id="likenumber" style="display: none; font-size: 10px; margin-bottom: 10px;">
+        <%= message.like %>
+       </div>
+      </div>
+    </li>
+  <% end %>
+<%= paginate @activities, :remote => true %>
+
+<% else %>
+  <li><p>No recent activity</p></li>
+<% end %>
+
+
+

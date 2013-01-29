@@ -1,0 +1,72 @@
+//alert("in the edit.js.erb");
+var button = $("#share_button");
+
+button.popover({trigger: "manual",
+  placement: "below-left",
+  offset: 10,
+  horizontalOffset: 25,
+  html: true,
+  title: function(){return "Share this note";},
+  //content: function(){return "This is other content";}
+  content: function(){return "<%=j render :partial => 'form' %>";}
+});
+
+/*butt.popover({trigger: "manual",
+  placement: "below-left",
+  offset: 10,
+  horizontalOffset: 25,
+  html: true,
+  title: function(){return "Share this note";},
+  content: function(){return "this is content";}
+  //content: function(){return "<%=j render :partial => 'form' %>";}
+});*/
+
+
+//button.popover('data-content', 'This is other content');
+button.popover("show");
+
+//doPopover('share_button', "share this note", getContent());
+
+  $('form').on('click', '.remove_fields', function(event) {
+    $(this).prev('input[type=hidden]').val('true');
+    $(this).closest('tr').hide();
+    return event.preventDefault();
+  });
+  $('form').on('click', '.add_fields', function(event) {
+    var regexp, time;
+    time = new Date().getTime();
+    regexp = new RegExp($(this).data('id'), 'g');
+    $('#ptable tr:last').after($(this).data('fields').replace(regexp, time));
+    $("select.chzn-select").data("placeholder", "Select Friends").chosen();
+    return event.preventDefault();
+  });
+
+/*getContent: function () {
+      var content
+        , $e = this.$element
+        , o = this.options
+
+      content = $e.attr('data-content')
+        || (typeof o.content == 'function' ? o.content.call($e[0]) :  o.content)
+
+      return content
+    }
+
+doPopover : function( item_id, title, content )
+{
+  // get jq item
+  var item = $('#' + item_id );
+
+  // the trick to "refresh content" in every call
+  item.attr('data-content', content); // do not use data() way.
+  item.attr('data-original-title', title);
+
+  // popover (trace first call if you want)
+  item.popover(
+  {
+     trigger :   'manual',
+	 placement : 'below-left'
+  });
+
+  item.popover('show');
+}*/

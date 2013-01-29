@@ -1,0 +1,152 @@
+<div>
+<h1 class="class_header"><big><%= truncate "#{@course.department} #{@course.number}" , length: 30 %><% if @class.verified == false %> <%= link_to("(Not Verified)", '#', id: 'invite_buddies')%><% end %> </h1>
+</div>
+<aside class="sidebar">
+  <section>
+    <header>
+      <div class="class_subheader" style="display:inline-block;"><%= @course.title %><% if @class.verified == false %><%= link_to " (edit)", '#', {class: "edit_title", style: "padding:0;"} %><% end %></div>
+    </header>
+  </section>
+  <section>
+    <header>
+      <h1 class="professor left">Professor: <small><%= @class.instructor ? "#{@class.instructor.first_name} #{@class.instructor.last_name}" : "Unknown" %></small></h1>
+    </header>
+  </section>
+  <%= render :partial => "classmates_preview", :locals => {:classmates => @classmates, :clazz => @class, empty_list_text: "Doesn't look like anyone's added this class" } %>
+<% if current_user.added_course?(@course) %>
+    <%= link_to "Drop this class", user_drop_class_path(:user_id => current_user.id, :offering_id => @class.id), method: :delete, confirm: "Are you sure?", style: "font-size: 11px;" %>
+  <% end %>
+</aside>
+
+<section class="course_activity">
+<div class="tab-content">
+<ul id="questions" class="active tab-pane">
+  <table class="group_post_table">
+    <tr><td>
+      <ul class="group_posts_bar">
+        <!--<h4>Questions and Comments!</h4>-->
+		<div style="margin-left:20px; margin-bottom:10px;margin-top:13px"><%= link_to image_tag("questionIcon.png"), '#', :class => 'ask_question selected'%>    
+		<%= link_to image_tag("commentIcon.png"), '#', :class => 'post_comment', :style => 'opacity:.6'%>
+		</div>
+          <% if current_user and current_user.added_course?(@course) %>
+		  <div id="question_form">
+            <%= render :partial => 'questions/form', :locals => {:question => Question.new, :classid => @class.id, :question_type => 'class'}%>
+		  </div>
+		  <div id="post_form" style="display:none">
+		    <%= render :partial => 'questions/post_form', :locals => {:question => Question.new, :classid => @class.id, :question_type => 'class'}%>
+		  </div>
+          <% else %>
+          <h3>You must enroll to ask questions</h3>
+          <% end %>
+      </ul>
+    </td></tr>
+    <tr><td>
+      <div class="question_activity_list">
+        <%= render :partial => 'questions/list_item', :locals => {:questions => @questions, :question_type => 'class'} %>
+      </div>
+    </td></tr>
+  </table>
+</ul>
+</div>
+</section>
+<section class="shared_materials">
+  <ul class="tabs" data-tabs="tabs">
+    <div id="other_document_button" style="margin-left: 300px; display: inline;">
+    <%= link_to content_tag(:span, "Upload A Document"), '/uploads', :class => "btn success", :id => "upload_note_button" %>
+    </div>
+    <li class="active"><a href="#notes">Class Notes </a></li>
+  </ul>
+  <div class="tab-content">
+    <ul id="notes" class="active tab-pane scrollPane">
+	<% if @class.enrollments.any? %>
+	<% @class.enrollments.each do |e| %>
+	<% begin %>
+	  <% e.folder.notes.each do |n|%>
+        <% if current_user.can_view?(n)%>
+          <li data-rel="<%= note_url(n) %>" class="linked_item note">
+            <% unless current_user.can_edit?(n)%>
+              <span class="locked"></span>
+            <% else %>
+              <span class="unlocked"></span>
+            <% end %>
+      <span><%= truncate n.name, length: 55 %></span>
+    </li>
+        <% else %>
+          <li class="linked_item note request_access">
+      <span><%= link_to (truncate n.name, length: 55), request_access_note_path(n), remote: true %></span>
+      </li>
+        <% end %>
+      <% end %>
+	<% rescue %>
+	<% end %>
+    <% end %>
+    <% end %>
+    </ul>
+  </div>
+</section>
+
+<script type="text/javascript">
+  $('.tabs').bind('change', function (e) {
+    $('.scrollPane').jScrollPane();
+  });
+
+	$('.edit_title').live('click', function(event) {
+		event.preventDefault();
+		$(this).parent().html('<%=j render "edit_class_title"%>')
+	});
+	
+  $('#invite_buddies').live('click', function(){
+	var popover_attribute = {
+      trigger: "manual",
+      placement: 'below-right',
+      offset: 0,
+      html: true,
+      title: function(){return "Verify This Course!";},
+      content: function(){ return "<%=j render :partial => 'classes/invite_classmates'%>";}
+    };
+
+	$(this).popover(popover_attribute);
+	$(this).popover("show");
+	$('.close_verify_box').removeClass("hidden");
+  });
+
+  $('#questiontext, #posttext').live('click', function(){
+	$(this).height(95);
+  });
+
+  $('.ask_question:not(.selected)').live('click', function(){
+	$(this).addClass('selected');
+	$(this).css('opacity', '1');
+	$('.post_comment').removeClass('selected');
+	$('.post_comment').css('opacity', '.6');
+	$('#question_form').css('display', 'block');
+	$('#post_form').css('display', 'none');
+  });
+
+  $('.post_comment:not(.selected)').live('click', function(){
+	$(this).addClass('selected');
+	$(this).css('opacity', '1');
+	$('.ask_question').css('opacity', '.6');
+	$('.ask_question').removeClass('selected');
+	$('#question_form').css('display', 'none');
+	$('#post_form').css('display', 'block');
+  });
+
+  $('.answer_field').live('click', function(e){
+	e.preventDefault();
+	$('#answer_for_' + $(this).attr('value')).css('display', 'inline-block');
+  });
+
+  $('.comment_field').live('click', function(e){
+	e.preventDefault();
+	$('#posting_for_' + $(this).attr('value')).css('display', 'inline-block');
+  });
+
+
+
+
+
+
+
+
+</script>

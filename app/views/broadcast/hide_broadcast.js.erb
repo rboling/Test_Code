@@ -1,0 +1,9 @@
+//$(".popover-header").html('<h3 class="title">Notifications Bro</h3>');
+$(".content").html('<%=j render :partial => "other_list" %>');
+<% unless @current_broadcasts.empty? %>
+	$("#broadcast_count_id").html('<%= @current_broadcasts.count %>');
+	$('#notifications_link_id').children().attr("src", "/assets/notifications_some.png");
+<% else %>
+	$("#broadcast_count_id").hide();
+	$('#notifications_link_id').children().attr("src", "/assets/notifications_none.png");
+<% end %>

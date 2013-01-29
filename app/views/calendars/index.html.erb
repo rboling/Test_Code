@@ -1,0 +1,153 @@
+  <% if flash[:notice] %>
+    <div class="alert alert-message success span7" style="text-align: center;">
+        <a class="close" href="#">×</a>
+        <%= flash[:notice] %>
+    </div>
+  <% else %>
+  <% end %>
+<div id="print" class="studyhall_print_branding" style="display: none"><h1>StudyHall.com</h1></div>
+<div id='calendar'></div>
+<div id="confirm_update" style="display:none;"></div>
+<div id="gcal" class="modal" style="display:none; width: 200px;">
+  <div class="modal-header">
+    <button class="close" data-dismiss="modal" style="background:none;">×</button>
+    <h3>Link your Google Calendar</h3>
+  </div>
+  <div class="modal-body">
+    <div class="popover-body form-stacked">
+      <div class="clearfix error_line" style="display:none">
+        <span style="color:red">Error authenticating with Google.</span>
+      </div>
+      <div id="cal_footer">
+        <div class="clearfix">
+          <label>Gmail Address</label>
+          <input id="emailIn" name="gmail_email" size="30" type="text"/>
+        </div>
+        <div class="clearfix">
+          <label>Password</label>
+          <input id="passIn" name="gmail_pass" size="30" type="password"/>
+        </div>
+        <div class="popover-footer">
+          <div id="cal_post" class="btn primary">Sync Calendar</div>
+          <button class="close btn" data-dismiss="modal" >Close</button>
+        </div>
+      </div>
+      <div id="cal_sending" class="popover-footer" style="display:none; text-align:center;">
+        <br/>
+        <span id="mitto1">Submitting...</span><br/>
+        <span id="mitto2" style="display:none;">Fetching Google data, this could take a minute.</span><br/>
+        <div style="display:inline-block;"><%= image_tag "ajax-loader.gif" %></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+$('.link_google_cal').bind('click', function(){
+  $("#gcal").modal({ backdrop: true }).modal('show');
+});
+
+$("#cal_post").bind("click", function() {
+  $("#cal_footer").hide();
+  $("#cal_sending").fadeIn(1200);
+  setTimeout(function() {
+    $("#mitto2").fadeIn(1200);
+    }, 3000);
+  $.ajax({
+    type: "POST",
+    url: "/calendars/link_google",
+    data: { email: $("#emailIn").val(), pass: $("#passIn").val() }
+  }).done(function(data) {
+    if(data == "OK")
+    {
+      window.location.replace("/calendars?google_link=1");
+    } else {
+      $(".error_line").fadeIn(500);
+      $("#cal_sending").hide();
+      $("#mitto2").hide();
+      $("#cal_footer").show();
+    }
+  });
+});
+
+var close_button = 0;
+
+function modalDialog(confirm_text, cal_id, new_date, event_time, revertFunc)
+{
+    close_button = 0;
+    $('#confirm_update').html(confirm_text)
+    $('#confirm_update').dialog({
+      title: "Confirm Update",
+			resizable: false,
+			draggable: false,
+			height:200,
+			modal: true,
+			buttons: {
+				"Confirm": function() {
+				  close_button = 1;
+				  confirmCallback(1, cal_id, new_date, event_time, revertFunc);
+				  $( this ).dialog('close');
+				},
+				Cancel: function() {
+				  close_button = 1;
+					confirmCallback(0, cal_id, new_date, event_time, revertFunc);
+					$( this ).dialog('close');
+				}
+			},
+			close: function() {
+			  if(close_button == 0){ confirmCallback(0, cal_id, new_date, event_time, revertFunc); }
+			}
+		});
+}
+
+function confirmCallback(dialog_ret, cal_id, new_date, event_time, revertFunc)
+{
+  if (dialog_ret == 1) {
+      $.ajax({
+        url: ['calendars', cal_id].join('/'),
+        type: 'PUT',
+        data: "newDate=" + new_date + "&newTime=" + event_time
+      });
+    }else{
+      revertFunc();
+    }
+}
+
+	
+$('#calendar').fullCalendar({
+  editable: true,
+  disableResizing: true,
+  eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
+    newEvent = event.start;
+    eventDate = newEvent.toDateString();
+    eventHour = newEvent.getHours();
+    amPm = ' am';
+    if(eventHour == 0){ eventHour += 12; }
+    if(eventHour == 12){ amPm = ' pm'; }
+    if(eventHour >= 13){ eventHour -= 12; amPm = ' pm'; }
+    eventMinuteInt = newEvent.getMinutes();
+    if(eventMinuteInt < 10){ eventMinute = "0" + eventMinuteInt; }else{ eventMinute = eventMinuteInt; }
+    eventTime = eventHour + ':' + eventMinute + amPm;
+    calId = event.url.match(/\?\d+/i)[0].substr(1);
+    eventMonthInt = newEvent.getMonth() + 1;
+    if(eventMonthInt < 10){ eventMonth = '0' + eventMonthInt; }else{ eventMonth = eventMonthInt + ''; }
+    eventDayInt = newEvent.getDate();
+    if(eventDayInt < 10){ eventDay = '0' + eventDayInt; }else{ eventDay = eventDayInt + ''; }
+    eventYear = newEvent.getYear() + 1900;
+    newDate = eventMonth + '/' + eventDay + '/' + eventYear;
+    modalDialog("Are you sure you want to reschedule this Studyhall for " + eventDate + " at " + eventTime + " ?", calId, newDate, eventTime, revertFunc);
+
+  },
+  header: {
+    left: 'title prev,next today',
+    center: '',
+    right: 'month,agendaWeek'
+  },	
+  events: <%= @user_cals %>,
+	
+});
+	
+});
+</script>

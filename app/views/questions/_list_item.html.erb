@@ -1,0 +1,78 @@
+<script type="text/javascript">
+    $('#questiontext').val('');
+	$('#questiontext').height(54);
+	$('#posttext').val('');
+	$('#posttext').height(54);
+</script>
+<ul class="unstyled">
+
+  <% if questions.length > 0 %>
+  <% questions.each do |question| %>
+    <% unless current_user and current_user.blocked?(question.user) %>
+      <li class="question_item">
+        <div class="class_question">
+          <div class="user_photo left">
+            <% if question.user %>
+              <%= link_to image_tag(question.user.photo_url(:medium)), question.user %>
+            <% else %>
+              <%= link_to image_tag("/assets/generic_avatar_medium.png"), user_missing %>
+            <% end %>
+          </div>
+
+          <div class="question_details left">
+            <%= question.user ? link_to(question.user.title_name, question.user, :class => 'user_name') : user_missing %>
+            <span class="question_time"><%= time_ago_in_words question.created_at %></span> <br/>
+            <%= auto_link("#{question.text}") %>
+            <div class="question_answer">
+            </div>
+          </div>
+		<% if question.flagged_as == 'question' %>
+			<%= link_to "answer", '#', :class => 'answer_field', :value => "#{question.id}" %>
+		<% else %>
+			<%= link_to "comment", '#', :class => 'comment_field', :value => "#{question.id}" %>
+		<% end %>
+        </div>
+        <% if question.has_answers? %>
+          <div class="answer_list">
+            <ul class="unstyled">
+              <%= render partial: "answers/list_item", collection: question.answers, as: :answer %>
+            </ul>
+          </div>
+        <% end %>
+        <% if question.has_postings? %>
+          <div class="posting_list">
+            <ul class="unstyled">
+              <%= render partial: "postings/list_item", collection: question.postings, as: :posting %>
+            </ul>
+          </div>
+        <% end %>
+        <% if question.flagged_as == 'posting' %>
+		<!-- this is the form that pops up for a comment-->
+        <div class="posting_form", id="posting_for_<%= question.id %>" style="display:none; width:500px">
+          <% if current_user.added_course?(question.offering.course) %>
+          <%= render "postings/form", :posting => question.postings.new, :class_id => question.offering_id, :group_id => question.group_id, :question_id => question.id, :user_id => current_user.id, :question_type => question.question_type %>
+          <% else %>
+          <h3></h3>
+          <% end %>
+        </div>
+        <% else %>
+		<!-- this is the form that pops up for an answer-->
+        <div class="answer_form", id="answer_for_<%= question.id %>" style="display:none; width:500px">
+          <% if current_user.added_course?(question.offering.course) %>
+          <%= render "answers/form", :answer => question.answers.new, :class_id => question.offering_id, :group_id => question.group_id, :question_type => question.question_type, :question_id => question.id %>
+          <% else %>
+          <h3></h3>
+          <% end %>
+        </div>
+        <% end %> 
+      </li>
+    <% end %>
+  <% end %>
+  <% end %>
+</ul>
+
+
+
+
+
+

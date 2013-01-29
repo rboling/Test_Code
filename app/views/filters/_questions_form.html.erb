@@ -1,0 +1,21 @@
+<%= form_for @filter, :html => {:class => "form-stacked filter_form"} do |f| %>
+  <%= f.hidden_field :model_name %>
+  <%= f.hidden_field :title %>
+  <div class="popover-header">
+    <div class="clearfix">
+      <%= label_tag "Filter to see only questions or comments" %>
+        <%= f.label :flagged_as, "Post", :value => 'posting' %>
+          <div class="input">
+            <%= radio_button_tag :flagged_as, 'posting', :selected => true, :id => "flagged_as" %>
+          </div>
+        <%= f.label :flagged_as_question, "Question", :value => 'question' %>
+          <div class="input">
+            <%= radio_button_tag :flagged_as, 'question', :id => "flagged_as" %>
+          </div>
+    </div>
+  </div>
+  <div class="popover-footer">
+    <%= f.submit "Filter", :class => "btn primary" %>
+    <%= link_to 'Cancel', "#", :class => "btn cancel_popover", "data-link-id" => "filter_button" %>
+  </div>
+<% end %>

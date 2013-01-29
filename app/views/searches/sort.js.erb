@@ -1,0 +1,9 @@
+<% if @type == "note" %>
+  $(".notes").html("<%= escape_javascript(render "notes_sorted") %>");
+<% elsif @type == "course" %>
+  $(".courses").html("<%= escape_javascript(render "courses_sorted") %>");
+<% elsif @type == "user" %>
+  $(".people").html("<%= escape_javascript(render "users_sorted") %>");
+<% elsif @type == "group" %>
+  $(".groups").html("<%= escape_javascript(render "groups_sorted") %>");
+<% end %>

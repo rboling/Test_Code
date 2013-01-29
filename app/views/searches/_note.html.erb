@@ -1,0 +1,22 @@
+<li class="search_result note">
+  <div>
+  <h3><%= link_to truncate(note.name, length: 100), note%></h3>
+  <% if ! defined? note.user.name %>
+    <label><h6>No user for this note</h6></label>
+  <% else %>  
+    <label><h6>Authored by <%= link_to(note.user.name, note.user) %></h6></label>
+  <% end %>
+  <% if current_user.can_view?(note) %>
+    <%= link_to "VIEW", note_path(note), class: 'btn right'%>
+  <% else %>
+    <%= link_to "REQUEST ACCESS", request_access_note_path(note), remote: true, class: 'btn right request_note_access_button' %>
+  <% end %>
+  </div>
+  <p>
+    <dl class="info narrow">
+      <dt>Authored</dt>
+      <dd><%= note.created_at.strftime("%m/%d/%Y") %></dd>
+    </dl>
+  </p>
+  <div class="clearfix"></div>
+</li>

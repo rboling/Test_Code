@@ -1,0 +1,199 @@
+<% if @success %>
+  hidePopovers();
+  <% %w{name photo affiliations course gpa bio}.each do |section| %>
+    <% if section != 'course' %>
+    $("#<%= section %>_section").html("<%=j render partial: section, locals: {user: @user} %>");
+    <%end%>
+    $("#<%= section %>_form").html("<%=j render partial: "#{section}_form", locals: {user: @user} %>");
+  <% end %>
+  $(".action_bar h3").text("<%= j truncate @action_bar_message, length: 60 %>")
+  <% if @tour %>
+    <% unless @next_form.nil? %>
+      <% if @next_form == 'invitations_form' %>
+        $("#offering_thing").remove();
+        $("#course_section").html('<li class="active"><a data-rel="courses_tab" href="#">Courses <span class="course_count">(<%= current_user.offerings.count %>)</span></a></li>');            
+        //$("#course_section").html('<li class="active"><a data-rel="courses_tab" href="#">Courses <span class="course_count">(<%= current_user.offerings.count %>)</span></a></li>');
+        $("#courses_tab").html('<%=j render partial: 'other_course_list', collection: current_user.offerings, as: :course, :locals => {:wrapper_class => "wrapper_large"} %>');
+
+        
+
+        if($(".activate_invitation").length > 0) {
+          $(".activate_invitation").trigger("click");
+        } else {
+          var invitation_tour = $(".buddies.tourable.invitations");
+          var invitations_form = $("#invitations_form").clone();
+          invitations_form.find('#gmail_invite_modal').remove();
+          invitations_form.find('#facebook_connect_modal').remove();
+          invitation_tour.popover({
+            trigger: 'manual',
+            placement: 'below-right',
+            html: true,
+            offset: 10,
+            horizontalOffset: 140,
+            title: function() { return "Invite your Buddies"; },
+            content: function() {return "<%=j render :partial => "shared/invite_buddies_popover", :locals => {:user => current_user} %>"; }
+          });  
+          invitation_tour.popover('show');
+        }
+        $("input.invite_buddies_save_button").live('click', function(){
+          window.location.href = '<%= home_index_url(tour: true)%>';
+        });
+
+      <% else %>
+		/* this is what moves the tour from form to the next form */
+        $("div.editable.edit").removeClass('active');
+        $("div[data-form='<%= @rel_form %>']").removeClass('edit');
+        $("div[data-form='<%= @next_form %>']").addClass('edit');
+        $("div[data-form='<%= @next_form %>']").trigger('click');
+      <% end %> // ends <%# if @next_form == 'blah_form'%>
+    <% else %>
+      window.location.href = '<%= home_index_url(tour: true)%>';
+
+    <% end %> // ends <%# unless @next_form.nil? %>
+  <% end %> // ends <%# if @tour %>
+
+
+  <% if @other %>
+    <% unless @next_form.nil? %>
+      <% if @next_form == 'invitations_form' %>
+
+        $("#offering_thing").remove();
+        $("#course_section").html('<li class="active"><a data-rel="courses_tab" href="#">Courses <span class="course_count">(<%= current_user.offerings.count %>)</span></a></li>');    
+        
+        //$("#course_section").html('<li class="active"><a data-rel="courses_tab" href="#">Courses <span class="course_count">(<%= current_user.offerings.count %>)</span></a></li>');
+        $("#courses_tab").html('<%=j render partial: 'other_course_list', collection: current_user.offerings, as: :course, :locals => {:wrapper_class => "wrapper_large"} %>');
+
+        
+
+        if($(".activate_invitation").length > 0) {
+          $(".activate_invitation").trigger("click");
+        } else {
+          var invitation_tour = $(".buddies.tourable.invitations");
+          var invitations_form = $("#invitations_form").clone();
+          invitations_form.find('#gmail_invite_modal').remove();
+          invitations_form.find('#facebook_connect_modal').remove();
+          invitation_tour.popover({
+            trigger: 'manual',
+            placement: 'below-right',
+            html: true,
+            offset: 10,
+            horizontalOffset: 140,
+            title: function() { return "Invite your Buddies"; },
+            content: function() {return "<%=j render :partial => "shared/invite_buddies_popover", :locals => {:user => current_user} %>"; }
+          });  
+          invitation_tour.popover('show');
+        }
+        $("input.invite_buddies_save_button").live('click', function(){
+          window.location.href = '<%= home_index_path(tour: true)%>';
+        });
+
+      <% else %>
+		/* this is what moves the tour from form to the next form */
+        $("div.editable.edit").removeClass('active');
+        $("div[data-form='<%= @other_form %>']").removeClass('edit');
+        $("div[data-form='<%= @next_form %>']").addClass('edit');
+        $("div[data-form='<%= @next_form %>']").trigger('click');
+      <% end %> // ends <%# if @next_form == 'blah_form'%>
+    <% else %>
+      window.location.href = '<%= home_index_path(tour: true)%>';
+
+    <% end %> // ends <%# unless @next_form.nil? %>
+  <% end %> // ends <%# if @tour %>
+
+  <% if @completion %>
+    <% unless @next_form.nil? %>
+      <% if @next_form == 'invitations_form' %>
+
+        $("#offering_thing").remove();
+        $("#course_section").html('<li class="active"><a data-rel="courses_tab" href="#">Courses <span class="course_count">(<%= current_user.offerings.count %>)</span></a></li>');    
+
+        
+        //$("#course_section").html('<li class="active"><a data-rel="courses_tab" href="#">Courses <span class="course_count">(<%= current_user.offerings.count %>)</span></a></li>');
+        $("#courses_tab").html('<%=j render partial: 'other_course_list', collection: current_user.offerings, as: :course, :locals => {:wrapper_class => "wrapper_large"} %>');
+
+        
+
+        if($(".activate_invitation").length > 0) {
+          $(".activate_invitation").trigger("click");
+        } else {
+          var invitation_tour = $(".buddies.tourable.invitations");
+          var invitations_form = $("#invitations_form").clone();
+          invitations_form.find('#gmail_invite_modal').remove();
+          invitations_form.find('#facebook_connect_modal').remove();
+          invitation_tour.popover({
+            trigger: 'manual',
+            placement: 'below-right',
+            html: true,
+            offset: 10,
+            horizontalOffset: 140,
+            title: function() { return "Your buddies"; },
+            content: function() {return "<%=j render :partial => "shared/invite_buddies_popover", :locals => {:user => current_user} %>"; }
+          });  
+          invitation_tour.popover('show');
+        }
+        $("input.invite_buddies_save_button").live('click', function(){
+          window.location.href = '<%= home_index_path %>';
+        });
+
+      <% else %>
+		/* this is what moves the tour from form to the next form */
+        $("div.editable.edit").removeClass('active');
+        $("div[data-form='<%= @rel_form %>']").removeClass('edit');
+        $("div[data-form='<%= @next_form %>']").addClass('edit');
+        $("div[data-form='<%= @next_form %>']").trigger('click');
+      <% end %> // ends <%# if @next_form == 'blah_form'%>
+    <% else %>
+      window.location.href = '<%= home_index_path %>';
+    <% end %> // ends <%# unless @next_form.nil? %>
+
+  <% end %> // ends <%# if @tour %>
+
+<% else %> // if !success
+  $("#edit_bio_form").prepend("<h2>Doh!</h2>");
+<% end %>
+<%# Javascript for courses autocomplete, see http://jqueryui.com/demos/autocomplete/#multiple%>
+function split( val ) {
+			return val.split( /;\s*/ );
+		}
+		function extractLast( term ) {
+			return split( term ).pop();
+		}
+    function course_get_results(request, response){
+      var params = {keywords: extractLast(request.term)};
+      $.get("/users/autocomplete_course", params, function(data){ 
+        response( $.ui.autocomplete.filter(data, extractLast( request.term ) ));
+      }, "json");
+    }
+				
+		$( "#offkeywords" )
+			// don't navigate away from the field on tab when selecting an item
+			.bind( "keydown", function( event ) {
+				if ( event.keyCode === $.ui.keyCode.TAB &&
+						$( this ).data( "autocomplete" ).menu.active ) {
+					event.preventDefault();
+				}
+			})
+			.autocomplete({
+				minLength: 1,
+				source: course_get_results,
+				search: function(){
+				  var term = extractLast( this.value);
+				  if (term.length <= 0){
+				    return false;
+				  }
+				},
+				focus: function() {
+					return false;
+				},
+				select: function( event, ui ) {
+					var terms = split( this.value );
+					terms.pop();
+					terms.push( ui.item.value );
+					// add placeholder to get the comma-and-space at the end
+					terms.push( "" );
+					this.value = terms.join( "; " );
+					current_ids = $("#course_id").val() + "," + ui.item.id;
+          $("#course_id").val(current_ids);
+					return false;
+				}
+			});

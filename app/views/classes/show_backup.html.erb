@@ -1,0 +1,14 @@
+<section class="shared_materials">
+  <ul class="tabs" data-tabs="tabs">
+    <li class="active"><a href="#notes">Notes <span>(<% # = @shared_notes.count %>)</span></a></li>
+  </ul>
+  <div class="tab-content">
+    <ul id="notes" class="active tab-pane scrollPane">
+      <% # @shared_notes.each do |note| %>
+        <!--<li class="linked_item note" data-rel="<% # = note_url(note) %>">
+          <span><% # = truncate note.name, :length => 60 %></span>
+        </li> -->
+      <% # end %>
+    </ul>
+  </div>
+</section>

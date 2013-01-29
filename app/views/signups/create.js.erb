@@ -1,0 +1,26 @@
+<% if @signup.new_record? %> //if the signup isn't a new record
+  <% @signup.errors.each do |attr,error| %>
+    $('#danger_message').removeClass('in');
+    $('#new_signup').addClass('in');
+    $("#signup_<%= attr.to_s %>")
+      .attr('title','<%= attr.to_s %> <%= error %>' )
+      .twipsy({placement: "below", trigger: "manual", animate: false, offset: 2})
+      .twipsy("show");
+  <% end %>
+<% else %>
+  $(".twipsy").hide();
+  <% if flash[:notice] %>
+  	$("#new_signup").remove();
+  	$('#success_message').addClass('in');
+	$('#success_message').html('<%= escape_javascript(flash[:notice]) %>');
+    $('#danger_message').removeClass('in');
+  <% elsif flash[:error] %>
+    /*$('#signup_email').addClass('danger');
+	$('#signup_btn').addClass('danger');
+	$('#ed_rev').addClass('danger');*/
+	//$('div.email-container.twipsy-true').removeClass('twipsy-true');
+  	$('#success_message').removeClass('in');
+    $('#danger_message').addClass('in');
+	$('#danger_message').html('<%= escape_javascript(flash[:error]) %>');
+  <% end %>
+<% end %>

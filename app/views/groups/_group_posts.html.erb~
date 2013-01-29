@@ -1,0 +1,27 @@
+<table class="group_post_table">
+  <tr><td>
+    <ul class="group_posts_bar">
+      <h4>Group Activity</h4>
+        <%= render :partial => "/group_posts/form" ,:locals => {:group_post => GroupPost.new, :comment_id => params[:comment_id], :link_id => params[:link_id]} %>
+    </ul>
+  </td></tr>
+  <tr><td>
+    <div id="group_posts_tab">
+      <div>
+        <% if @root_posts.length == 0 %>
+          <div style="height:200px">There is currently no group activity.</div>
+        <% else %>
+          <ul style="height:200px">
+            <% @root_posts.each do |post| %>
+              <%= render :partial => "group_post", :locals => {:post => post, :group => @group} %>
+            <% end %>
+          </ul>
+        <% end %>
+      </div>
+    </div>
+  </td></tr>
+</table>
+
+<script type="text/javascript">
+  $("#group_posts_tab ul").jScrollPane({hideFocus: true});
+</script>

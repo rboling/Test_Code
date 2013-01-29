@@ -1,0 +1,25 @@
+<% if @message.blank? %>
+
+Hi there! 
+<br>
+<%= @name %> thinks you’re really smart and wants to collaborate with you on Studyhall.
+<br>
+Click <%= link_to "here", @url%> to join StudyHall!
+<p>
+</p>
+<p>
+	<br/>
+Or click <%= link_to "here", ('/landing_page') %> to learn more about StudyHall!
+</p>
+
+<p>
+<br/>
+- Your friends at StudyHall
+</p>
+
+<% else %>
+<%= @message %>
+Click <%= link_to "here", @url%> to join StudyHall today!
+<% end %>
+	
+

@@ -1,0 +1,40 @@
+.auth_provider img {
+  display: block;
+  margin-left: auto;
+  margin-right: 20px;
+}
+
+.auth_provider {
+  text-decoration: none;
+  text-align: center;
+}
+
+table.authentication_services {
+  margin: 0px;
+
+  td {
+    width: 50%;
+    text-align: center;
+    border: none;
+    img {
+      display: table-cell;
+      text-align: center;
+    }
+  }
+}
+
+.separator {
+  text-align:center;
+  border-bottom: 1px solid #d5d5d5;
+  margin-bottom: 30px;
+
+  span {
+    display:inline-block;
+    font-weight:100;
+    font-size: 18pt;
+    position:relative;
+    top:18px;
+    background:#fff;
+    padding: 10px 12px;
+  }
+}

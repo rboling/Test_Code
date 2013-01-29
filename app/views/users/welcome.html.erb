@@ -1,0 +1,40 @@
+<% if flash[:notice] %>
+  <div class="alert alert-message success span7">
+    <a class="close" href="#">×</a>
+    <%= flash[:notice] %>
+  </div>
+<% end %>
+
+<div class="single-form">
+  <div class="header"><h1>Welcome to StudyHall!</h1></div>
+  <%= form_for @user, :html => {:class => "form-stacked"} do |f| %>
+    <%= render 'authentications/signupservices' %>
+     <div style="text-align:center;width:300px">
+       <span>Or Create Your StudyHall Account</span>
+     </div>
+     <%= f.error_messages %>
+     <div class="clearfix">
+       <%= f.label :email %>
+       <div class="input"><%= f.text_field :email, :readonly => 'true' %></div>
+     </div>
+     <div class="clearfix" style="position:relative">
+       <%= f.label :password%>
+       <div class="input"><%= f.password_field :password, :placeholder => 'Your New Password' %></div>
+     </div>
+     <div>
+       <%= f.submit "Create Account", :class => "btn primary" %>
+     </div>
+   <% end %>
+</div>
+
+<script type="text/javascript">
+
+$(document).ready(function (){
+	$('[id*="edit_user_"]').validate({
+		rules: {
+			"user[password]": {required: true, minlength: 6}
+		}
+	});
+});
+
+</script>

@@ -1,0 +1,12 @@
+<% unless @note.new_record? %>
+<% if current_user.can_copy?(@note) %>
+	<%= link_to "Copy", copy_note_path, class: "btn" %>
+<% end %>
+<%= link_to "Print", '', :onclick => 'javascript:print(); return false;', class: 'btn' %>
+<%= link_to "Delete", delete_note_path(@note), method: :get, class: "danger btn", remote: true, id: "delete_button" %>
+    <%= link_to content_tag(:span, 'Study with this note'), {:controller => :study_sessions, :action => :direct, :note_id => @note.id}, :class => "primary btn popover_button non_edit", :id => "invite_study_session_button" %>
+
+<%= link_to('X', '#', class: 'btn', id: 'close_popover', style: 'margin-left:11px; margin-top:-15px; margin-right:-30px')%>
+<% end %>
+
+

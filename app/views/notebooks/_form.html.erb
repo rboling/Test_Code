@@ -1,0 +1,38 @@
+<% @notebook ||= notebook %>
+<%= form_for @notebook, :remote => true, :html => {:class => "form-stacked", :id => "edit_notebook_form", :'data-type' => "html"} do |f| %>
+  <div class="popover-body"><% if @notebook.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@notebook.errors.count, "error") %> prohibited this notebook from being saved:</h2>
+
+      <ul>
+      <% @notebook.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="clearfix">
+    <%= f.label :name %>
+<%= f.text_field :name %>
+  </div>
+  <div class="clearfix">
+    <%= f.label "Course" %>
+    <%= collection_select :notebook, :folder_id, current_user.folders.where(Folder.arel_table[:enrollment_id].not_eq(nil)), :id, :name, {:include_blank => "Choose Your Course"}, {:class => "chzn-select", "data-placeholder" => "Choose Your Course"} %>
+  </div>
+
+  <div class="clearfix">
+    <div class="input">
+      <div class="input-prepend">
+        <label class="add-on">
+          <%= f.check_box :shareable, checked: "checked", class: "activation_check_box" %>
+        </label>
+        <%= text_field_tag nil, nil, value: "Share this notebook", class: "prepended_checkbox disabled", disabled: true, style: "width: 150px;" %>
+      </div>
+    </div>
+  </div></div>
+  <div class="popover-footer">
+    <%= f.submit :class => "btn primary" %>
+    <%= link_to 'Cancel', "#", :class => "btn cancel_popover", "data-link-id" => @modal_link_id %>
+  </div>
+<% end %>

@@ -1,0 +1,12 @@
+var button = $(".tabs");
+button.popover({
+  trigger: "manual",
+  placement: "below-left",
+  offset: 10,
+  horizontalOffset: 25,
+  html: true,
+  title: function(){return "Access Requested";},
+  content: function(){return " \t Thanks! We'll let you know as soon as you receive access!";}
+});
+button.popover("show");
+$('div.popover').delay(1500).fadeOut(600);

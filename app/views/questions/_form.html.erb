@@ -1,0 +1,21 @@
+<%= form_for question, :url => questions_path(classid), :remote => true, :html => {:class => "form-stacked", :id => "question_form_button", :"data-type" => "html"} do |f| %>
+  <div class="popover-body">
+    <div class="clearfix">
+      <%= hidden_field_tag 'class_id', classid %>
+      <%if question_type == 'class' %>
+        <%= hidden_field_tag 'question_type', 'class' %>
+      <%else%>
+        <%= hidden_field_tag 'question_type', 'group' %>
+      <%end%>
+      <div class="input"><%= text_area_tag :message, nil, :rows => 5, :style => "overflow-y: auto; resize:none", :id => "questiontext", :placeholder => "Ask Your Question Here" %></div>
+      <div style="display:none">  
+        <%= radio_button_tag :flagged_as, 'question', :selected => true, :id => "flagged_as" %>
+	  </div>
+    </div>
+  </div>
+  <div class="final">
+    <div class="input">
+      <%= f.submit "Ask!", :class => "btn success right", :id => "question", :style => 'margin-right:70px; margin-top: 0' %>
+    </div>
+  </div>
+<% end %>

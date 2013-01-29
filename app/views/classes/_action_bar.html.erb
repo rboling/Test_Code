@@ -1,0 +1,35 @@
+<div class="action_bar">
+  <div class="container">
+    <div class="buttons left">
+      <%= link_to "Start A Studyhall", new_study_session_path(:link_id => "invite_study_session_button"), :class => "btn primary popover_button", :id => "invite_study_session_button", :remote => true %>
+      <%= link_to "Take Notes", new_note_path, :class => "btn " %>
+    </div>
+    <h3><%= flash[:action_bar_message] %></h3>
+	
+    <div class="buttons right">
+	<% if current_user %>
+      <% if current_user.added_course?(@course) %>
+      <%= link_to "Questions", "/questions/view_question/#{@class.id}", :method => "post", :remote => true, :id => "question_only_button", :class => "btn small" %>
+      <%= link_to "Comments", "/questions/view_comment/#{@class.id}", :method => "post", :remote => true, :id => "comment_only_button", :class => "btn small" %>
+      <%= link_to "All", "/questions/view_all/#{@class.id}", :method => "post", :remote => true, :id => "view_all_button", :class => "btn small" %>
+      <% end %>
+      <%#= link_to "View Questions", "view_questions/#{@class.id}", method: :get, :class => "btn small" %>
+      <%#= link_to "View Comments", "view_comments/#{@class.id}", method: :get, :class => "btn small" %>
+      <!--Xinyi will review this code -->
+      <% if @class.school.id == current_user.school.id %>
+        <% unless (current_user.added_course?(@course)) %>
+		<% if @class.verified == false %>
+			<%= link_to "Join to verify!", user_add_class_path(:user_id => current_user.id, 
+	       :offering_id => @class.id), method: :create, confirm: "Please make sure the course information is correct before verifying it!", style: "font-size: 11px;", :class => " btn" %>
+		<% else %>
+          <%= link_to "Add this class", user_add_class_path(:user_id => current_user.id, 
+       :offering_id => @class.id), method: :create, confirm: "Are you sure?", style: "font-size: 11px;", :class => " btn" %>
+		<% end %>
+        <% end %>
+      <% end %>
+     <% end %>
+    </div>
+  </div>
+</div>
+
+<div id="new_study_session_modal" class="modal_dialog"></div>

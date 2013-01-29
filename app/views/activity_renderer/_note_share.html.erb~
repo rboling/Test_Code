@@ -1,0 +1,1 @@
+<p> just shared a <%= note.class.to_s.downcase %>: <%= link_to truncate(note.name, length: 20), note %></p>

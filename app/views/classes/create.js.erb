@@ -1,0 +1,11 @@
+var popover_attr = {
+  trigger: "manual",
+  placement: "below-right",
+  offset: 23,
+  html: true,
+  title: function(){return "Invite your classmates to verify this class!";},
+  content: function(){return "<%=j render 'invite_classmates' %>";}
+};
+
+$("ol.course_list").popover(popover_attr);
+$("ol.course_list").popover("show");

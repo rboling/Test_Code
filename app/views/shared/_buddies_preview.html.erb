@@ -1,0 +1,105 @@
+<% no_invitation ||= false %>
+<section class="buddies invitations tourable" data-popover-id="invitation_tour">
+ <section class="yr-buddies">
+  <div class="heading">
+    <h5><%= user == current_user ? "Your" : "#{user.first_name}'s" %> Buddies </h5>
+    <h5 class="count" >(<%= user.friends.count %>)</h5> 
+    <span class="view"> <%= link_to "View All", friends_path(user), id: 'view_all_buddies_button' %></span>
+  </div>
+  <% if user.friends.any? %>
+    <ul style= "margin-left: 20px" class="buddies-list">
+      <% user.friends.take(9).each do |friend| %>
+        <li class="your"><%= link_to image_tag(friend.photo_url(:medium)), friend, :title => friend.name %>
+		<%#= link_to image_tag('generic_avatar_medium.jpg'), friend, :title => friend.name %></li>
+      <% end %>
+    </ul>
+  <% end %>
+ </section>
+
+<% if current_user %>
+<% user_recs = Recommendation.populate_rec_bar(current_user.id) %>
+ <section class="rec-buddies <%= 'hidden' if current_user != user or user_recs.empty?%>">
+  <div class="heading"><h5>Recommended Buddies</h5></div>
+    <ul style="margin-top: -20px; margin-left:20px" class="buddies-list">
+      <% if !current_user.recommendations.empty? %>
+        <% user_recs.each do |rec| %>
+          <% rec = User.find(rec) %>
+            <li class="rec" style="width:200px;height:55px"><%= link_to image_tag(rec.photo_url(:medium)), rec, :style => 'float:left' %> 
+				<%#= link_to image_tag('generic_avatar_medium.jpg'), rec, :style => 'float:left' %> 
+				<div style="margin-top:0px; margin-left:60px"><%= link_to rec.name, rec %></div>
+				<div style="margin-top:1px; margin-left:65px"><%= link_to "Add Buddy", '#', :class => 'add_buddy', :value => "#{rec.id}", :id => "#{rec.id}", :style => 'font-size:11px; font-weight:bold' %></div>
+			</li>
+				
+        <% end %>
+      <% end %>
+    </ul> 
+ </section>
+<% end %>
+
+  <% if @textbook %>
+    <header><h1 class="left">Get at them books!</h1></header>
+    <div style="width:280px; overflow:hidden">
+    <%= @textbook.textbook_html.html_safe if @textbook.textbook_html %>  
+    </div>
+  <% end %>
+
+</section>
+<div id="view_all_buddies" class="modal" style="display:none">
+  <div class="modal-header">
+    <% if user == current_user %>
+      <h3>Your Buddies (<span class="total_buddies"><%= user.friends.count %></span>)</h3>
+    <% else %>
+      <h3><%= user.first_name %>'s Buddies</h3>
+    <% end %>
+  </div>
+  <div class="modal-body">
+    <ul>
+      <% user.friends.each do |user| %>
+        <li class="clearfix buddy_list_item <%= cycle('odd','') %>">
+          <div class="left photo">
+            <%= link_to image_tag(user.photo_url(:medium)), user, :title => user.name %>
+          </div>
+          <div class="left meta">
+            <%= link_to user.name, user %>
+            <%= user.school.try(&:name) %>
+          </div>
+          <div class="right">
+            <% if current_user && user != current_user %>
+            <% end %>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="cancel_popover btn">Close</a>
+  </div>
+</div>
+<script type="text/javascript">
+  $(document).ready(function(){
+    var view_all_buddies_modal = $("#view_all_buddies").modal({backdrop: true, keyboard: true});
+    $(".buddies").delegate("#view_all_buddies_button","click",function(e){
+      view_all_buddies_modal.modal("show");
+      $("#view_all_buddies ul").jScrollPane({hideFocus: true});
+      e.preventDefault();
+    });
+    $("#view_all_buddies").delegate(".cancel_popover","click",function(e){
+      $("#view_all_buddies").modal('hide');
+      e.preventDefault();
+    });
+	$('.add_buddy').live('click', function(e){
+		e.preventDefault();
+		var user_id = $(this).attr("value");
+		$(this).html("Requesting...");
+		$.ajax({
+			type: "POST",
+			url: "/friends?rec=yes&user_id=" + user_id
+		}).done(function( data ) {
+			$('#' + user_id).html("Success!");
+			setTimeout(function() {$('#' + user_id).parent().parent().remove()}, 2000);
+		});
+	});
+
+
+  });
+</script>

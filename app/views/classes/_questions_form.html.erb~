@@ -1,0 +1,24 @@
+<%= form_for question, :url => '/classes/create_questions/#{@class.id}', method: :post, :remote => true, :html => {:class => "form-stacked", :id => "question_form_button"} do |f| %>
+  <div class="popover-body">
+    <div class="clearfix">
+      <%= hidden_field_tag 'class_id', classid %>
+      <%if question_type == 'class' %>
+        <%= hidden_field_tag 'question_type', 'class' %>
+      <%else%>
+        <%= hidden_field_tag 'question_type', 'group' %>
+      <%end%>
+      <div class="input"><%= text_area_tag :message, nil, :rows => 5, :style => "overflow-y: auto; width: 600px;", :id => "questiontext"%></div>
+      <%= f.label :flagged_as, "Post", :value => 'posting' %>
+      <div class="input">
+<%=  radio_button_tag :flagged_as, 'posting', :selected => true, :id => "flagged_as" %>
+      </div>
+      <%= f.label :flagged_as_question, "Question", :value => 'question' %>
+      <div class="input"><%= radio_button_tag :flagged_as, 'question', :id => "flagged_as" %></div>
+    </div>
+  </div>
+  <div class="final">
+    <div class="input">
+      <%= f.submit "Share With Class!", :class => "btn success", :id => "question" %>
+    </div>
+  </div>
+<% end %>

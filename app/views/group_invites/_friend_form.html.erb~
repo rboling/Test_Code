@@ -1,0 +1,18 @@
+<%= form_for @group_invite, :url => group_invites_path(@group), :remote => true, :html => {:class => 'form-stacked'} do |f| %>
+  <div class="popover-body">
+    <%= f.hidden_field :sender_id %>
+    <%= f.label :user_id, "Select a buddy to invite" %>
+    <%= f.collection_select :user_id, current_user.friends, :id, :name, {}, class: 'chzn-select', 'data-placeholder' => 'Select a buddy' %>
+	<!-- .other_than(@group.users) -->
+    <%= f.label :message %>
+    <%= f.text_area :message, rows: 5, cols: 60 %>
+    <div class="clearfix"></div>
+    <%= f.check_box :send_email %>
+    <%= f.label :send_email, "Send as email also?", :style => "display:inline" %>
+    <div class="clearfix"></div>
+  </div>
+  <div class="popover-footer">
+    <%= f.submit "Send Invite", class: 'btn primary' %>
+    <%= link_to 'Cancel', "#", :class => "btn cancel_popover", "data-link-id" => "invite_button" %>
+  </div>
+<% end %>

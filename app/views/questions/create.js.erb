@@ -1,0 +1,4 @@
+<% puts "hell yeah" %>
+$('#questions_here').html('<%=j render partial: 'questions/list_item', :locals => {:questions => @questions, :class_id => params[:class_id], :question_type => 'class'} %>');
+<% puts "here am I in create??" %>
+$('#questions_here').html('<%= escape_javascript(paginate(@questions, :remote => true)) %>');

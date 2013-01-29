@@ -1,0 +1,55 @@
+<% url = @note.new_record? ? notes_path(:format => @remote ? :js : :html) : note_path(@note, :format => @remote ? :js : :html) %>
+<%= form_for @note, url: url, :remote => @remote, :html => {:class => "form-stacked", :id => "edit_note_form", :'data-type' => "html"} do |f| %>
+  <div class="popover-body">
+	<%= f.hidden_field :content, :id => "note_content_hidden_field" %>
+  <div class="clearfix">
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+
+	  <div class="clearfix">
+      <%= f.label "Course" %>
+		<% if @note and @note.folder %>
+			<%= collection_select :note, :folder_id, current_user.folders.where(Folder.arel_table[:enrollment_id].not_eq(nil)), :id, :name, {}, {:class => "chzn-select", :selected_value => @note.folder_id} %>
+		<% else %>
+			<%= collection_select :note, :folder_id, current_user.folders.where(Folder.arel_table[:enrollment_id].not_eq(nil)), :id, :name, {:include_blank => "Choose Your Course"}, {:class => "chzn-select", "data-placeholder" => "Choose a folder"} %>
+		<% end %>
+	  </div>
+
+  <div class="clearfix">
+      <%= f.label "Document Type" %>
+		<div class="doc_type_field">
+		<%= select(:note, :doc_type, options_for_select(CSV.read("db/doc_types.csv"), @note.doc_type), {:include_blank => "Choose a document type"}, :id => "doc_type_field", :class => "chzn-select") %>
+		</div>
+    </div>
+  <div class="save_to_notebook" style="display:<%= @note.doc_type == "1" ? 'block' : 'none' %>">
+    <%= f.label "Save To Notebook" %>
+	<% if @note and @note.notebook %>
+      <%= collection_select :note, :notebook_id, current_user.notebooks, :id, :name, {}, {:class => "chzn-select", :selected_value => @note.notebook.id} %>
+	<% else %>
+	<%= collection_select :note, :notebook_id, current_user.notebooks, :id, :name, {:include_blank => "Choose a notebook"}, {:class => "chzn-select", "data-placeholder" => "Choose a notebook"} %>
+	<% end %>
+  </div>
+
+</div>
+<div class="popover-footer" style="border:0;padding-top:0 ">
+  <div class="input clearfix" style="margin-bottom:0">
+	<%= link_to 'Cancel', "#", :class => "btn cancel_popover right", "data-link-id" => @modal_link_id %>
+    <%= f.submit 'Save', :class => "btn primary right", style: "margin-right:10px" %>
+  </div>
+</div>
+<% end %>
+
+<script>
+
+	$('.doc_type_field .chzn-results li').live('click', function(event){
+		if ($('.doc_type_field .result-selected').html() == "Notes"){
+			$('.save_to_notebook').css('display', 'block');
+		}
+		else {
+			$('.save_to_notebook').css('display', 'none');
+		}
+	});
+
+</script>
+

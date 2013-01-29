@@ -1,0 +1,115 @@
+<p style="text-align:center">Thanks for adding your course but now you need to invite your classmates so that you can use it!</p> </br>
+
+
+<!--<div class="input">
+    <%#= collection_select( :user, :name, current_user.friends, :name, :name, {multiple: true}, {:multiple => true, class: 'large chzn-select', :value => 'Select Some Buddies'})%>
+</div>-->
+
+<div id="split-container">
+	<% if @class.nil? %>
+	<p style="text-align:center"> Click below to invite classmates from your Gmail account</p>
+
+	<div id="fb-container" style="align:center">
+	<div class="input">
+	<a href="#" id="gmail_invite" data-controls-modal="gmail_invite_modal" data-backdrop="true" data-keyboard="true"><%= image_tag "gmail-button.png", height: '34', style: "display:block; margin-left:auto; margin-right:auto" %></a>
+	<%#= render :partial => "shared/gmail_modal" %>
+	</div>
+	</div>
+	<p style="text-align:center">Or enter their school emails below and click add</p>
+	<% else %>
+	<p style="text-align:center"> Enter your classmates' school emails below and click add</p>
+	<% end %>
+	<div style="text-align:center;color:black;" id="invited_friends" class="hidden">
+		You've invited: 
+	</div>
+	
+<div id="email-container">
+  <div class="input" style="font-size:16px; height:24px">
+	<input name="email" id="email" style="width:120px;margin-left:60px; height:20px; font-size:15px "/>@<%= current_user.school.domain_name %>
+	<%= link_to "Add", "#", :class => 'add_email btn primary', style: "margin-left:10px"%>
+  </div>
+<div>
+	
+
+
+<div style="height:20px; width:100%; margin-top:20px">
+	<%= link_to "Done", "#", :class => 'close_verify_box hidden btn right', :style => 'margin-right:12px'%>
+	<% if @class.nil? %>
+		<%= link_to "Add Another Course", '#', :class => 'close_verify_box_add btn hidden right success', :style => 'margin-right:12px'%>
+	<% end %>
+</div>
+</div>
+
+<script>
+$(document).ready(function(){
+	
+	$('.close_verify_box').live('click', function(event){
+		event.preventDefault();
+		var email = $('#email').val();
+		<% if @class.nil? %>
+		$.ajax({
+			type: "POST",
+			data: {email: email, done: "true"},
+			url: "/classes/1/invite"
+		});
+		<% else %>
+		$.ajax({
+			type: "POST",
+			data: {email: email, done: "true"},
+			url: "/classes/" + <%= @class.id %> + "/invite"
+		});
+		<% end %>
+		
+		$('.popover').remove();
+	});
+	
+	$('.close_verify_box_add').live('click', function(event){
+		event.preventDefault();
+		var email = $('#email').val();
+		$.ajax({
+			type: "POST",
+			data: {email: email, done: "true"},
+			url: "/classes/1/invite"
+		});
+		$('.popover').remove();
+		$('#add_course_button').trigger('click');
+	});
+	
+	$('.add_email').live('click', function(event){
+		event.preventDefault();
+		var email = $('#email').val();
+		$('#email').val("");
+		<% if @class.nil? %>
+		$.ajax({
+			type: "POST",
+			data: {email: email},
+			url: "/classes/1/invite"
+		}).done(function( data ) {
+			if(data.length > 1 ){
+				$('.close_verify_box_add').removeClass("hidden");
+				$('.close_verify_box').removeClass("hidden");
+				$('#invited_friends').removeClass("hidden");
+				$('#invited_friends').append(data + ", ");}
+		});
+		<% else %>
+		$.ajax({
+			type: "POST",
+			data: {email: email},
+			url: "/classes/" + <%= @class.id %> + "/invite"
+		}).done(function( data ) {
+			if(data.length > 1 ){
+				$('.close_verify_box').removeClass("hidden");
+				$('#invited_friends').removeClass("hidden");
+				$('#invited_friends').append(data + ", ");}
+		});
+		<% end %>
+	});
+
+	$("#gmail_invite").live('click', function(e){
+		$('.close_verify_box').removeClass("hidden");
+		$('.close_verify_box_add').removeClass("hidden");
+	});
+
+});
+
+</script>

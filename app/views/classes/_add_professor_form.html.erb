@@ -1,0 +1,37 @@
+<div id="select_prof_section">
+<div class="prof_label">
+    <h7>Choose your professor</h7>
+  </div>
+
+<tr>
+	<td>
+		<div class="input prof_last_choose" style="width:170px; display:inline-block"><select id="prof_last_number" name="prof_last[number][]" style="width: 130px; visibility:hidden;">Professor</select></div>
+	</td>
+	<td>
+		<div class="input prof_first_choose" style="width:170px; display:inline-block"><select id="prof_first_number" name="prof_first[number][]" style="width: 130px; visibility:hidden;">Professor</select></div>
+	</td>
+	<td>
+		<%= link_to "Add A New Professor", '#', :id => 'add_prof_link' %>
+	</td>
+<tr>
+	
+</div>
+<div id="add_db_prof_partial" style="display:none">
+	<%= render "classes/add_prof_db" %>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#add_prof_link').live('click', function(e){
+			e.preventDefault();
+			$('#select_prof_section').fadeOut();
+			$('#add_db_prof_partial').fadeIn();
+			$('h3.title').html("Add Your Professor");
+			$('.submit').addClass('hidden');
+			$('.add_new_prof').removeClass('hidden');
+		});
+	});
+
+
+
+</script>

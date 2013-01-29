@@ -1,0 +1,2 @@
+module OfferingPermissionsHelper
+end

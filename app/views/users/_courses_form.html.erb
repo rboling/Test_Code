@@ -1,0 +1,32 @@
+<%= form_for user, :remote => true, :html => {:class => "form-stacked", :'data-type' => "html", :id => "add_course_form"} do |f| %>
+  <div class="popover-body">
+  <% if @enrollment.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@enrollment.errors.count, "error") %> prohibited this contact from being saved:</h2>
+      <ul>
+      <% @enrollment.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+	<%= fields_for :courses do |builder|%>
+    <div class="clearfix">
+      <div class="course_label">
+        <%= builder.label :Choose_Course %>
+		<%= builder.text_field :title, :id => "title", :class => "ui-autocomplete-input" %>
+        
+	  </div>
+	</div>
+	<% end %>
+  </div>
+  <div class="popover-footer">
+	<%#= link_to "Save", user_add_class_path, method: :create, :class => "btn primary add_course_final" %>
+    <%= f.submit "Save", :class => "btn primary add_course_final" %>
+    <%= link_to 'Cancel', "#", :class => "btn cancel_course_popover" %>
+  </div>
+<% end %>
+
+<%#= label :Choose_Course %>
+<%#= text_field :title, :id => "title", :class => "ui-autocomplete-input" %>

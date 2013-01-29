@@ -1,0 +1,1 @@
+<p><%= link_to user.title_name, user %> just re-posted: <%= message %></p>

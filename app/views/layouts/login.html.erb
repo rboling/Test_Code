@@ -1,0 +1,29 @@
+<% @layout = "fixed_width" %>
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if IE 9]>    <html class="no-js ie9" lang="en"> <![endif]--> 
+<!--[if gt IE 9]><!--> <html class="no-js wf-loading" lang="en"> <!--<![endif]-->
+<head>
+  <title>Studyhall</title>
+  <%= favicon_link_tag %>
+  <%= favicon_link_tag 'apple-icon.png', :rel => 'apple-touch-icon', :type => 'image/png' %>
+  <%= stylesheet_link_tag    "application" %>
+  <%= javascript_include_tag "application" %>
+  <%= javascript_include_tag APP_CONFIG["opentok"]["js_src"] %>
+  <%= csrf_meta_tags %>
+  <link href='https://fonts.googleapis.com/css?family=Overlock:700' rel='stylesheet' type='text/css'>
+  <%= yield :head %>
+</head>
+<body class="<%= controller_name + "-" + action_name %> fixed-width">
+  <div id="wrap" >  
+  
+  <%= render :partial => "layouts/topbar" %>
+  <section class="main-content" style="background: url(assets/loginpageCollage.jpg);">
+    <div class="narrow container"><%= yield %></div>
+  </section>
+  </div> 
+  <%= render "layouts/footer" %>
+</body>
+</html>

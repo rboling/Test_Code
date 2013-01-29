@@ -1,0 +1,26 @@
+var formContainer = $("#new_group_invite").parent()
+var formContainer = $("#new_group_invite")
+function showHideSuccessMessage(){
+  $(formContainer).find(".alert-message").fadeOut(500, function(){
+    $(formContainer).find(".alert-message").remove();
+  });
+  $("#invite_button").popover("hide");
+}
+
+
+<% if @group_invite.new_record? %>
+  $("#message_new #error_explanation").html("<p><strong>Uh-oh!</strong> There was a problem. Please fill out all fields and try again.</p>");
+  $("#message_new #error_explanation").removeClass("hidden");
+
+
+
+<% else %> 
+
+  $("#group_invite_new").animate({opacity: 0},1000)
+  setTimeout(function(){$("#new_group_invite").parent().html("<div class='popover-body'><div class=\"alert-message success\">Your invite was sent.</div></div>")}, 500);
+
+  setTimeout(function(){$("#new_group_invite").html("<div class='popover-body'><div class=\"alert-message success\">Your invite was sent.</div></div>")}, 500);
+
+  setTimeout(function(){showHideSuccessMessage()},2000);
+
+<% end %>

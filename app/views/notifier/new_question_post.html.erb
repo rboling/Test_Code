@@ -1,0 +1,4 @@
+<p>
+<%= link_to @question.user.name.titleize, "http://#{APP_CONFIG['host']}/" + @question.user.custom_url %> just posted in  <%= link_to @question.offering.course.title, class_url(@question.offering) %>.  You can check it out <%= link_to 
+"here", class_url(@question.offering) %> 
+</p>

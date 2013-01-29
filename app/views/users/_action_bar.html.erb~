@@ -1,0 +1,48 @@
+<div class="action_bar">
+    <div class="container">
+      <% if params[:action] == "show" %>
+        <div class="buttons left">
+          <% if current_user && @user != current_user %>
+			<span id="friend_request"> 
+			<!-- putting this as <div> was messing the styling up, I know it isn't best practice but it works-->
+			<% if current_user.friend_with? @user %> 
+		<!--in this case, @user is the user whose profile is being shown and current_user is the user who is viewing it -->
+			<% elsif current_user.invited? @user%>
+				<%= link_to "Request Pending", '#', :class => 'btn small'%>
+			<% elsif @user.invited? current_user %>
+				<%= link_to "Confirm", friend_path(@user), :class => 'btn small success', :remote => true, :method => 'put' %>
+				<%= link_to "Reject", friend_path(@user), :class => 'btn small', :method => 'delete' %>
+			<% else %>
+				<%= link_to "Add Buddy", friends_path(:user_id => @user), :class => 'btn small success', :remote => true, :method => 'post' %>
+			<% end %>
+			</span>
+            <%# if current_user.follows?(@user) %>
+              <%#= link_to "Unfollow", unfollow_path(@user), :class => "btn small unfollow_button", :remote => true, :method => :delete %>
+              <%#= link_to "Follow", follow_path(:followed_user_id => @user.id), :class => "btn small hidden follow_button", :remote => true, :method => :post %>
+            <%# else %>
+              <%#= link_to "Unfollow", unfollow_path(@user), :class => "btn small hidden unfollow_button", :remote => true, :method => :delete %>
+              <%#= link_to "Follow", follow_path(:followed_user_id => @user.id), :class => "btn small follow_button", :remote => true, :method => :post %>
+            <%# end %>
+            <%= link_to("Message #{@user.first_name}", new_user_message_path(@user), :class => "btn", :id => "new_message_button", "data-title" => "Send #{@user.first_name} a message", :remote => true) %>
+          <% end %>
+        </div>
+      <% end %>
+      <h3>
+        <%= truncate flash[:action_bar_message], :length => 60 %>
+      </h3>
+      <div class="buttons right">
+        <% if current_user %>
+          <% if params[:action] == "show" && @user && @user != current_user %>
+            <%#= link_to "Invite to a Studyhall", new_study_session_path(:id => @user, :link_id => "invite_study_session_button"), :id => "invite_study_session_button", :class => "btn small", :remote => true %>
+	    <%= link_to "Schedule A Studyhall", new_study_session_path(:link_id => "new_calendar_button", :calendar => "true"), :class => "btn popover_button non_edit", :id => "new_calendar_button", :remote => true %>
+
+
+
+         <% elsif params[:action] == "show" %>
+             <%= link_to("Edit", edit_user_path(@user), :class => "btn editable edit_button") if @current_user && @user.editable_by?(@current_user) %> 
+             <%= link_to "All Done!", @user, :class => "btn success small editable edit_button_again edit" %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+</div>

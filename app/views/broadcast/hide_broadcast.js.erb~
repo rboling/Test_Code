@@ -1,0 +1,26 @@
+
+//if ($("#notifications_link_id").popover("show")) {
+//  alert($("#notifications_link_id").popover("show"))
+//  alert("hey");
+//  $("#notifications_link_id").popover("hide");
+//  var button = $("#<%=j @link_id %>");
+//  button.popover({
+//    trigger: "manual",
+//    placement: "below-left",
+//    offset: 10,
+//    horizontalOffset: 25,
+//    html: true,
+//    id: "broadcast_popover_new",
+//    title: function(){return "Notifications Here Dude";},
+//    content: function(){return "<%=j render :partial => 'other_list' %>";}
+//  });
+//  button.popover("show");
+//}
+
+//else {
+//  alert("bashbash");
+//}
+
+$(".popover-header").html('<h3 class="title">Notifications Bro</h3>');
+$(".content").html('<%=j render :partial => 'other_list' %>');
+$("#broadcast_count_id").html('<%= @current_broadcasts.count %>');

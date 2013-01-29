@@ -1,0 +1,18 @@
+<% if f.object.offering_id != nil %>
+<tr>
+  <td style="color:black;"><%= Offering.find_by_id(f.object.offering_id).course.title %></td>
+  <td><%= f.check_box :can_view, :disabled => true %></td>
+  <td><%= f.check_box :can_edit, :disabled => true %></td>
+  <td><%= f.check_box :can_copy, :disabled => true %></td>
+  <td></td>
+</tr>
+<% else %>
+<tr>
+  <td style="color:black;"><%= Offering.find_by_id(f.object.offering_id).course.title if f.object.offering_id != nil%></td>
+  <td><%= f.check_box :can_view, :disabled => true %></td>
+  <td><%= f.check_box :can_edit %></td>
+  <td><%= f.check_box :can_copy %></td>
+  <td><%= f.hidden_field :_destroy %>
+	  <%= link_to "remove", '#', class: "remove_fields" %></td>
+</tr>
+<% end %>

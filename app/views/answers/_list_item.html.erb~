@@ -1,0 +1,19 @@
+<% unless answer.new_record? || current_user.blocked?(answer.user)%>
+  <li class="answer_item">
+    <div class="class_answer">
+      <div class="user_photo left">
+        <% if answer.user %>
+          <%= link_to image_tag(answer.user.photo_url(:medium)), answer.user %>
+        <% else %>
+          <%= link_to image_tag("/assets/generic_avatar_medium.png"), user_missing %>
+        <% end %>
+      </div>
+      <div class="answer_details left">
+        <%= answer.user ? link_to(answer.user.title_name, answer.user) : user_missing %> 
+        <span class="answer_time"><%= time_ago_in_words answer.created_at %>ago</span> <br/>
+        <%= auto_link("#{answer.text}") %>
+      </div>
+      <%= render partial: "questions/utilities", locals: {question: answer} %>
+    </div>
+  </li>
+<% end %>

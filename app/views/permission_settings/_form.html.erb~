@@ -1,0 +1,61 @@
+<%= form_for @permission_set do |f| %>
+  <% if @permission_set.errors.any? %>
+    <div class="error_messages">
+      <h4><%= pluralize(@permission_set.errors.count, "error") %> prohibited these settings from being saved:</h4>
+      <ul>
+      <% @permission_set.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+<%#= render 'group_permissions', f: f %>
+
+  <table id="ptable">
+  <tr>
+  <th>User/Course</th>
+  <th>Can View?</th>
+  <th>Can Edit?</th>
+  <th>Can Copy?</th>
+  <th>Remove?</th>
+  </tr>
+
+  <tr>
+	<td style="color:black;"> Everyone at my School </td>
+	<td><%= f.check_box :school_can_view %></td>
+	<td><%= check_box_tag("nothing", value = "0", checked= false, options={:disabled=>true})%></td>
+	<td><%= f.check_box :school_can_copy %></td>
+	<td></td>
+  </tr> 
+
+  <tr>
+	<td style="color:black;"> All of my Study Buddies </td>
+	<td><%= f.check_box :buddies_can_view %></td>
+	<td><%= check_box_tag("nothing", value = "0", checked= false, options={:disabled=>true})%></td>
+	<td><%= f.check_box :buddies_can_copy %></td>
+	<td></td>
+  </tr>
+
+  <%= f.fields_for :permissions do |builder| %>
+    <%= render 'existing_permission_fields', f: builder %>
+  <% end %>
+  <br>
+  <%= f.fields_for :offering_permissions do |builder| %>
+    <%= render 'existing_offering_permission_fields', f: builder %>
+  <% end %>
+  <%= f.fields_for :group_permissions do |builder| %>
+    <%= render 'existing_group_permission_fields', f: builder %>
+  <% end %>
+
+    
+  </table>
+  <%= link_to_add_fields "Add Individual Collaborator", f, :permissions %>
+  <br style="margin-top: 10px;">
+  <%= link_to_add_fields "Add a Course", f, :offering_permissions %>
+  <br>
+  <br>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

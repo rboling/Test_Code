@@ -1,0 +1,25 @@
+<%= form_for user, :url => '/users/reply_with_activity/#{current_user.id}', method: :post, :remote => true, :html => {:class => "form-stacked", :id => "reply_to_activity_form", 'data-placeholder' => 'reply here', :style => "margin-right: 50px; padding-left: 0px;"} do |f| %>
+  <div class="popover-body">
+    <div class="clearfix">
+      <div class="input" id="do_this_right_now" style="margin-left: 20px;">
+          <%= text_area_tag :message, nil, :rows => 5, :style => "overflow: hidden; width: 400px; height: 70px; background-color: #FFFFFF; margin-right: 20px; margin-top: 12px;", :id => "reply_activity_text", :placeholder => 'reply here', :maxlength => "111" %>
+      </div>
+      <% # = f.label :flagged_as, "Public", :value => 'posting', :style => "display: inline;" %>
+<% # =  radio_button_tag :message_type, 'public', :selected => true, :id => "flagged_as", :style => "display: inline;" %>
+      <% # = f.label :flagged_as_question, "Private", :value => 'question', :style => "display: inline;" %>
+      <% # = radio_button_tag :message_type, 'private', :id => "flagged_as", :style => "display: inline;" %>
+    </div>
+  </div>
+  <div class="reply_final" style="display: inline;">
+    <div class="input">
+      <%= f.submit "Reply!", :class => "btn success", :id => "activity_message", :style => "margin-left: 223px; margin-top: -1px;" %>
+    <%= hidden_field_tag 'sendee_id', sendee.id %>
+    <%= hidden_field_tag 'old_message_body', old_message %>
+    </div>
+    <div id="text_warning" style="display: none; font-size: 10px;">
+      <small>Replies must contain fewer than 110 characters</small>
+    </div>
+  </div>
+<% end %>
+
+

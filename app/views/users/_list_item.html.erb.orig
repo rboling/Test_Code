@@ -1,0 +1,60 @@
+<% if @user.activity.any? %>
+  <% puts "#{@activities.all}"%>
+  <% @activities.each do |message| %>
+    <li class="activity_message">
+      <div id="message-section" style="font-size: 12px;">
+      <% if message.activist_id == current_user.id %>
+        <div id="delete_activity_section" style="font-size: 10px; display: inline;">
+        <%= link_to "x", "/users/delete_activity/#{message.id}", :method => "post", :remote => true, :id => "delete_activity_button" %>
+        </div>
+      <% else %>
+        <div id="delete_activity_section" style="font-size: 10px; display: inline;">
+        <%= link_to "x", "/users/hide_activity/#{message.id}", :method => "post", :remote => true, :id => "delete_activity_button" %>
+        </div>
+      <% end %>
+        <% @appropriate_user = User.where(:id => message.activist_id).first  %>
+        <%#= link_to image_tag(@appropriate_user.photo_url(:medium)), @appropriate_user, title: @appropriate_user.title_name if @appropriate_user %>
+		<%= link_to image_tag("generic_avatar_medium.jpg"), @appropriate_user, title: @appropriate_user.title_name if @appropriate_user %>
+        <%= link_to @appropriate_user.title_name, @appropriate_user %>
+        <div id="the_message" style="margin-top: 19px;"><%= message.body.html_safe %></div>
+      </div>
+      <div class="time" style="display: none;"><%= time_ago_in_words message.created_at %> ago</div>    
+      <div id="reply-section", style="display: inline-block; font-size: 10px; margin-top: -30px; margin-left: 400px;">
+        <b><%= link_to "Reply", "#", :id => "reply_button", :style => "display: inline-block; margin-left: -21px;" %></b>
+        <b><%= link_to "Close", "#", :id => "close_button", :style => "display: none;" %></b>
+        <b><%= link_to "Share!", "/users/share_activity/#{message.id}", :method => "post", :remote => true, :id => "share_button", :title => "Share on Facebook and on Studyhall!", :style => "margin-left: 10px;" %></b>
+        <% if current_user.has_likes.where(:activity_message_id => message.id).blank? %>
+        <%= link_to image_tag('/assets/thumbsnew.png'), "/users/increase_like/#{message.id}", :method => "post", :remote => true, :id => "like_button" %>
+        <% else %>
+        <%= link_to image_tag('/assets/thumbsnew.png'), "/users/increase_like/#{message.id}", :method => "post", :remote => true, :class => "disabled", :id => "like_button" %>
+        <% end %>
+       <div id="likenumber" style="display: inline-block; font-size: 10px; margin-bottom: 10px;">
+        likes: <%= message.like %>
+       </div>
+      </div>    
+      <div id="share-section" style="display: block; font-size: 10px; margin-top: -18px; margin-right: 78px; font-size: 10px; width: 1;">
+        
+      </div>
+      <div id="like-section" style="display: block; margin-right: 9px; margin-top: -30px; font-size: 10px; width: 1;">
+      </div>
+<<<<<<< HEAD
+
+      <div id="other-time" style="display: inline-block; font-size: 12px; margin-right: 53px; margin-top: 27px;"><%= time_ago_in_words message.created_at %> ago</div>     
+=======
+      <div id="other-time" style="display: inline-block; width: 200px; font-size: 10px; margin-right: 260px; margin-top: -8px;"><%= time_ago_in_words message.created_at %> ago</div>     
+>>>>>>> lauraDash
+
+
+      <div id="reply_form" style="display: none; width: 50px; height: 50px; margin-top: -30px; margin-left: 6px;">
+        <%= render :partial => '/home/reply_form', :locals => {:user => current_user, :sendee => @appropriate_user, :old_message => message.body}%>
+      </div>
+    </li>
+  <% end %>
+<%= paginate @activities, :remote => true %>
+
+<% else %>
+  <li><p>No recent activity</p></li>
+<% end %>
+
+
+

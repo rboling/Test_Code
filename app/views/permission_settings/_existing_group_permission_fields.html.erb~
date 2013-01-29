@@ -1,0 +1,9 @@
+<tr>
+  <td style="color:black;"><%= Group.find_by_id(f.object.group_id).name if f.object.group_id != nil%></td>
+  <td><%= f.check_box :can_view, :disabled => true %></td>
+  <td><%= f.check_box :can_edit %></td>
+  <td><%= f.check_box :can_copy %></td>
+  <td><%= f.hidden_field :_destroy %>
+	  <%= link_to "remove", '#', class: "remove_fields" %></td>
+</tr>
+

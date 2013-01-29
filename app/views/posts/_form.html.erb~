@@ -1,0 +1,17 @@
+<%= form_for post, :url => posts_path(classid), :remote => true, :html => {:class => "form-stacked", :id => "post_form_button", :"data-type" => "html"} do |f| %>
+  <div class="popover-body">
+    <div class="clearfix">
+      <%= f.label :mess, "Comment" %>
+      <%= hidden_field_tag 'class_id', classid %>
+      <%if post_type == 'class' %>
+        <%= hidden_field_tag 'post_type', 'class' %>
+      <%else%>
+        <%= hidden_field_tag 'post_type', 'group' %>
+      <%end%>
+      <div class="input"><%= text_area_tag :message, nil, :rows => 5, :style => "overflow-y: auto; width: 600px;", :id => "posttext"%></div>
+    </div>
+  </div>
+  <div class="popover-footer clearfix">
+    <%= f.submit "Post", :class => "btn primary", :id => "post" %>
+  </div>
+<% end %>

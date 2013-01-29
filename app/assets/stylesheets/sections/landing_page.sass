@@ -1,0 +1,333 @@
+// LANDING PAGE
+
+=center-width($width)
+  left: 50%
+  margin-left: - ($width / 2)
+  position: absolute
+  width: $width
+
+.awesome-landing
+  background-color: #353847
+  .twipsy-inner
+    +opacity(100)
+    background-color: $red
+    color: $black
+  .twipsy.below .twipsy-arrow
+    border-bottom: 5px solid $red
+    border-left: 5px solid transparent
+    border-right: 5px solid transparent
+  .twipsy.above
+    .twipsy-inner
+      background-color: $white
+  footer
+    margin: 0
+  h1
+    text-align: center
+    text-shadow: 0 1px 0 $white
+  .primary //button style override
+    font-size: 12px
+    color: $white
+    font-weight: 900
+    text-shadow: 0 1px 2px rgba(0,0,0, .5)
+  .header
+    background-color: #353847
+    height: 670px
+    position: relative
+    overflow: hidden
+    width: 100%
+    h1, .browser-quad, .browser-main, .glow, .zigzag
+      position: absolute
+    h1, .browser-quad, .browser-main, .glow
+      background-repeat: no-repeat
+      background-position: center center
+      background-color: transparent
+    h1
+      +center-width(840px)
+      background: image-url(asset-path('landing/brownandblue2new.png','image')) no-repeat 
+      height: 400px
+      margin-top: -65px
+      margin-left: -420px
+      z-index: 50
+    .browser-main
+      +center-width(398px)
+      +box-shadow(0px 0 10px rgba(0,0,0, .33))
+      background: image-url(asset-path('/assets/landing/browser-main.jpg', 'image')) no-repeat
+      height: 376.8px
+      z-index: 540
+      bottom: -65px
+    .browser-quad
+      +center-width(1112px)
+      background: image-url(asset-path('landing/browser-quad.png','image'))
+      height: 399.6px
+      z-index: 520
+      bottom: -90px
+    .zigzag
+      background: image-url(asset-path('landing/zigzag.png','image'))
+      bottom: 0
+      height: 50px
+      width: 100%
+      z-index: 30
+    .glow
+      +center-width(1280px)
+      background: image-url(asset-path('landing/glow.png','image'))
+      height: 491px
+      z-index: 10
+  .signup
+    background: #2B1D12
+    height: 155px
+    margin: 0
+    position: relative
+    z-index: 500
+    #ed_rev
+      margin-top: 65px
+      &.danger
+        margin-top: 90px
+    h1
+      padding-top: 20px
+      +header-font(medium, 40px, 40px)
+    .quick-signup
+      padding: 0
+      position: relative
+      z-index: 10
+      margin: 0 auto
+    .input
+      float: left
+      margin-left: 0
+    .email-container, .password-container
+      margin-right: 10px
+      margin-left: 520px
+      margin-top: -378px
+      .danger
+        margin-top: 35px
+    input[type="submit"]
+      margin: 10px 0 0 0
+      position: relative
+      margin-left: 750px
+      margin-top: -378px
+      width: auto
+      &.danger
+        margin-top: 45px
+    #url, .primary
+      display: block
+      float: left
+    #url
+      width: 189px
+    .success
+      height: 37px
+      margin: 0 0 0 -2px
+      padding: 12px 9px
+    #new_user, #info_message, #success_message
+      +transition(opacity .5s ease)
+      +opacity(0)
+      &.in
+        +opacity(100)
+    #danger_message
+      position: absolute
+      left: 50%
+      margin-left: 0
+      top: -430px
+      width: 500px
+      z-index: 0
+      text-align: center
+    #success_message
+      position: absolute
+      left: 50%
+      top: -400px
+      margin-left: 0
+      width: 400px
+      z-index: 0
+      text-align: center
+  .reasons
+    +box-shadow(inset 0 10px 15px rgba(0,0,0, .33))
+    background: #a6a7ac
+    position: relative
+    overflow: hidden
+    margin-top: -245px
+    z-index: 600
+    
+    header
+      height: 96px
+      position: relative
+      .btn
+        +opacity(0)
+        visibility: hidden
+    h1
+      +header-font(medium, 30px, 43px)
+      background: image-url(asset-path('landing/arrows.png','image')) no-repeat left 0px transparent
+      color: $white
+      cursor: pointer
+      height: 43px
+      padding: 0 0 0 55px
+      position: absolute
+      left: 50%
+      margin-left: -280px
+      text-shadow: 0 1px 1px rgba(0,0,0, .4)
+      top: 30px
+    .close, .primary
+      position: absolute
+      top: 40px
+    .close
+      left: 0
+      padding: 7px 15px
+    .primary
+      right: 0
+    
+    .content
+      background: $white
+      height: 0
+    
+    video
+      position: absolute
+      left: 50%
+      margin: 0 0 0 -350px
+      top: 235px
+    
+    .postits
+      li
+        +ir // Image replacement class
+        background: image-url(asset-path('landing/postits.png','image')) no-repeat center center transparent
+        cursor: pointer
+        position: absolute
+        left: 50%
+      .notes
+        background-position: 0 0
+        height: 245px
+        margin: 0 0 0 -444px
+        top: 236px
+        width: 242px
+        z-index: 100
+      .start
+        background-position: -245px 0
+        height: 260px
+        margin: 0 0 0 -238px
+        top: 225px
+        width: 257px
+        z-index: 90
+      .share
+        background-position: -503px 3px
+        height: 242px
+        margin: 0 0 0 -7px
+        top: 178px
+        width: 235px
+        z-index: 80
+      .work
+        background-position: -750px 0
+        height: 240px
+        margin: 0 0 0 206px
+        top: 222px
+        width: 250px
+        z-index: 70
+      .meet
+        background-position: 0 -250px
+        height: 240px
+        margin: 0 0 0 -455px
+        top: 417px
+        width: 245px
+        z-index: 60
+      .login
+        background-position: -243px -260px
+        height: 240px
+        margin: 0 0 0 -240px
+        top: 462px
+        width: 260px
+        z-index: 50
+      .collaborate
+        background-position: -500px -238px
+        height: 263px
+        margin: 0 0 0 -46px
+        top: 467px
+        width: 260px
+        z-index: 30
+      .free
+        background-position: -753px -238px
+        height: 270px
+        margin: 0 0 0 185px
+        top: 442px
+        width: 260px
+        z-index: 40
+  .footer
+    height: auto
+    z-index: 700
+
+.js #landing
+  +transition(margin 1s ease )
+  .header
+    h1
+      +transition(top .5s ease .5s)
+      top: -120px
+      &.drop
+        top: 57px
+    .login-button
+      +transition(top .5s ease 1s )
+      top: -35px
+      &.drop
+        top: 15px
+    .browser-main
+      +transition(bottom .75s ease 1s )
+      bottom: 530px
+      &.drop
+        bottom: -65px
+    .browser-quad
+      +transition(bottom .85s ease 1s)
+      bottom: 500px
+      &.drop
+        bottom: -90px
+    video
+      display: none
+    .mejs-container
+      display: none
+      video
+        display: block
+  .reasons
+    .video_shim
+      position: absolute
+      left: 50%
+      height: 393px
+      top: 235px
+      margin: 0 0 0 -350px
+      width: 700px
+      z-index: 10
+    .mejs-container
+      +opacity(20)
+      background-color: transparent
+      position: absolute
+      left: 50%
+      margin: 0 0 0 -350px
+      top: 235px
+      z-index: 0
+      video
+        +opacity(100)
+        position: static
+        margin: 0
+    .content
+      +transition(height 1s ease )
+    .postits
+                      
+  &.slide-open
+    margin: -570px 0 0 0
+    .reasons
+      header
+        .btn
+          +opacity(100)
+          visibility: visible
+        h1
+          background-position: left -106px
+      .content
+        height: 714px
+        .mejs-container, .postits
+          visibility: visible
+  .reasons
+    header.up
+      h1
+        background-position: left -106px
+      .btn
+        +opacity(100)
+        visibility: visible
+.ie8
+  .quick-signup
+    width: 950px
+    #user_custom_url
+      line-height: 37px
+    .url-container
+      input.primary
+        right: -70px

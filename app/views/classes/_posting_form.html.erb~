@@ -1,0 +1,20 @@
+<%= form_for posting, :url => '/classes/create_posting/#{@class.id}', :remote => true, :html => {:class => "form-stacked", :"data-type" => "html"} do |f| %>
+  <div class="user_photo left">
+      <%= link_to image_tag(current_user.photo_url(:medium)), current_user %>
+  </div>
+  <%if question_type == 'group' %>
+    <%= hidden_field_tag 'question_type', 'group' %>
+    <%= hidden_field_tag 'group_id', group_id %>
+  <%else%>
+    <%= hidden_field_tag 'question_type', 'class' %>
+    <%= hidden_field_tag 'class_id', class_id %>
+  <%end%>
+    <%= hidden_field_tag 'question_id', question_id %>
+  <div class="clearfix">
+    <%= f.label :text, "Your Comments" %>
+    <div class="input"><%= f.text_area :text, :rows => 2 %></div>
+  </div>
+  <div class="clearfix">
+    <%= f.submit "Comment", :class => "btn primary" %>
+  </div>
+<% end %>

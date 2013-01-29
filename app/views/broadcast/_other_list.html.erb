@@ -1,0 +1,14 @@
+<div class="broadcast_container">
+  <% if @user_broadcasts.empty? %>
+    <div class="notification_empty_div">You have no new notifications.</div>
+  <% else %>
+    <ul class="notification_list">
+      <% @user_broadcasts.each do |b| %>
+        <li class="notification_item"><div style="padding-left:20px; padding-right:20px; width:370px"><%= link_to "x", "/broadcast/hide_broadcast/#{b.id}", :remote => true, :method => "post" %><%= link_to b.message, edit_broadcast_path(b.id), :style => "margin-left: 15px;", :id => b.id %></div></li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>
+<div class="popover-footer clearfix">
+  <%= link_to 'Close', "", :class => "btn cancel_popover right", "data-link-id" => @link_id, :style => "margin-bottom: -10px" %>
+</div>

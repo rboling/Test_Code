@@ -1,0 +1,7 @@
+<%= render :partial =>'sort_form', :locals => {:type => 'course', :keywords => @search.keywords}%>
+<% @search.courses(params[:page] || 1).results.each do |search_result| %>
+  <% search_result.offerings.each do |offering| %>
+        <%= render :partial => "course", :locals => {:offering => offering} %>
+  <% end %>
+<% end %>
+<%= paginate @search.courses(params[:page] || 1).results, remote: true, params: { category: "courses"} %>

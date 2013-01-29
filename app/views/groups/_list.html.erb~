@@ -1,0 +1,4 @@
+<% @groups.each do |group| %>
+  <%= render :partial => "list_item", :locals => {:group => group} %>
+<% end %>
+<%= paginate @groups, remote:true %>

@@ -1,0 +1,6 @@
+<%= form_for @course, :url => edit_class_path, :remote => true do |f| %>
+	
+	<%= @course.title %>
+	
+<%= f.submit %>
+<% end %>

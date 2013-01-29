@@ -1,0 +1,102 @@
+<div id="tour_popovers" style="display: none">
+  <div class="tour_popover " id="standard_actions_tour" data-title="Get started <small>Study with pals or take notes</small>">
+    <div class="popover-body">
+      <p>Start a StudyHall and study with friends without leaving the sofa. Or take notes in class, at the library, or on the john.</p>
+    </div>
+  <div class="popover-footer" style="border:0;padding-top:0">
+    <div class="input clearfix" style="margin-bottom:0">
+      <%#= submit_tag "Next", :class => 'btn primary tour_button save right', :next_tour_id => 'invitation_tour' %>
+    </div>
+	</div>
+  </div>
+  <div class="tour_popover " id="activity_tour" data-title="Your Activity <small>Where your ish happens</small>" data-h-offset="65" data-offset='10'>
+    <div class="popover-body">
+      <p>Coolest place ever. This is where you can see you and your buddy's activity, who they studied with, courses they've added, stuff like that.</p>
+    </div>  
+  <div class="popover-footer" style="border:0;padding-top:0">
+    <div class="input clearfix" style="margin-bottom:0">
+      <%#= submit_tag "Next", :class => 'btn primary tour_button save right', :next_tour_id => 'add_courses_tour' %>
+    </div>
+	</div>
+  </div>
+
+  <div class="popover-footer" style="border:0;padding-top:0">
+    <div class="input clearfix" style="margin-bottom:0">
+      <%#= submit_tag "Done", :class => 'btn primary tour_button save right' %>
+    </div>
+	</div>
+  </div>
+
+<!--  <div class="tour_popover " id="add_course_concluding_tour_backup" data-title="Let's Start Studying!" data-h-offset="65" data-offset='10'>
+    <div class="popover-body">
+      <%# = render :partial => 'classes/form' %>        
+
+      <%#= link_to 'Take Notes', new_note_path %>, <%#= link_to 'Upload Documents', notes_path(:trigger_upload => 1) %>, <%#= link_to 'Start a Studyhall', new_study_session_path(:link_id => "invite_study_session_button"), :remote => true %>, and go wild on the campus cloud!
+
+    </div>  
+    <div class="popover-footer">
+      <%#= submit_tag "Done", :class => 'btn primary tour_button save' %>
+    </div>
+  </div>
+
+</div>-->
+<script type="text/javascript">
+  var hideTourPopovers = function() {
+    $(".tourable").each(function(){
+      $(this).popover('hide');
+    });
+  };
+  var showTourPopover = function(tourable) {
+    /*var tour_popover = $("#" + tourable.data('popover-id')).clone();
+    tour_popover.find("#gmail_invite_modal").remove()
+    tour_popover.find("#facebook_connect_modal").remove()
+    var h_offset = tour_popover.data('h-offset') || 110;
+    var offset = tour_popover.data('offset') || 5;
+    tourable.popover({trigger: "manual",
+                      placement: 'below-right',
+                      html: true,
+                      offset: offset,
+                      horizontalOffset: h_offset,
+                      title: function(){return tour_popover.data('title');},
+                      content: function(){ return tour_popover.html(); }});
+    tourable.popover("show");*/
+  };
+  var initTourMode = function() {
+		alert("made it to the initTourMode function");
+		/*$('.modal').remove();
+		$('.popover').remove();
+		$('.modal-backdrop').remove();*/
+		$('#add_course_button').trigger('click');
+		alert("past add course trigger call");
+		
+    /*$("#invitation_tour").find(".popover-footer input.btn").val("Next").attr('next_tour_id', 'activity_tour');
+    showTourPopover($("div.standard_actions"));
+    $(".tour_button").live('click', function(){
+        hideTourPopovers();
+        var next_tour_id = $(this).attr('next_tour_id'); 
+        if(next_tour_id == 'add_courses_tour') {
+			$('.modal').remove();
+			$('.popover').remove();
+			$('.modal-backdrop').remove();
+			$('#add_course_button').trigger('click');
+		}
+        var tourable = $("div[data-popover-id='"+ next_tour_id +"']");
+        if(tourable.length == 0) {
+          tourable = $("section[data-popover-id='"+ next_tour_id +"']");
+          if(tourable.length == 0) {
+            tourable = $("li[data-popover-id='"+ next_tour_id +"']");
+          }
+        }
+        showTourPopover(tourable);
+        return false;*/
+    //});
+
+    //$("a.cancel_popover").click(function(){
+    //});
+  };
+
+  $(document).ready(function(){
+	$('#add_course_button').trigger('click');
+    initTourMode();
+  });
+</script>

@@ -1,0 +1,85 @@
+<div id="menubar" class="topbar notes">
+  <div class="right">
+    <% if @note.new_record? %>
+      <%= link_to "Save As", @notebook ? new_notebook_note_path(@notebook, :link_id => "save_note_button") : new_note_path(:link_id => "save_note_button"), :remote => true, :id => "save_note_button", :class => 'btn' %>
+    <% else %>
+	  <%= link_to "Share", edit_permission_setting_path(@note.permission_setting.id), id: "share_button", :class => "btn primary edit_button action_button" %>
+	<% if current_user == @note.owner %>
+      <%= link_to "Save As", edit_note_path(:id => @note.id, :link_id => "save_note_button"), :remote => true, :id => "save_note_button", :class => 'btn' %>
+	<% end %>
+   <%= link_to "Save", '#' , :remote => true, :id => 'quick_save', :class => 'btn' %>
+	<% end %>
+	
+  </div>
+  <div class="left">
+	<%= link_to("Close", '#', :class => "btn close_doc" ) %>
+	<% unless @note.new_record? %>
+	<a id="edit_drop" class="btn">Options</a>
+	<% end %>
+  </div>
+  <div class="middle">
+    <%= truncate @note.name, :length => 70 %>
+  </div>
+</div>
+  <% # = text_area_tag "content", @note.content, :id => "rte_area_note_content", :class => "rte_area" %>
+  <%= cktext_area_tag("content", @note.content, :id => "rte_area_note_content", :input_html => {:cols => 40, :rows => 80}, :toolbar => 'Full', :style => "td#cke_contents_content{height: 500px;}") %>  
+</div>
+	
+<script>
+$(document).ready(function(){
+
+	var content_data;
+	$('#quick_save').live('click', function(event){
+		var form_data = new FormData();
+		form_data.append("content", $("#cke_contents_content iframe").contents().find('.cke_show_borders').html());
+	  	$.ajax({
+			type: "PUT",
+			processData: false,
+			contentType: false,
+			data: form_data,
+			url: "/notes/" + "<%=j @note.id.to_s %>"
+		}).done(function( data ) {
+			$('#quick_save').addClass('success');
+			setTimeout(function() {$('#quick_save').removeClass('success')}, 600);
+			content_data = data;
+		});
+	});
+	<% if @note.content %>
+	$('.close_doc').live('click', function(){
+		var current_content = $("#cke_contents_content iframe").contents().find('.cke_show_borders').html();
+		if ( current_content == "<%=j @note.content.html_safe %>" || content_data ) {
+			window.location = "<%= notes_path %>";
+		}else{
+			var r=confirm("You have unsaved content! Are you sure you want to leave without saving?");
+			if (r==true){
+				window.location = "<%= notes_path %>";
+			}
+		}
+	});
+	<% else %>
+	$('.close_doc').live('click', function(){
+		window.location = "<%= notes_path %>";
+	});
+	<% end %>
+
+	var edit_drop = $('#edit_drop');
+	edit_drop.popover({
+	  trigger: "manual",
+	  placement: "below-right",
+	  offset: 10,
+	  horizontalOffset: 25,
+	  html: true,
+	  title: function(){return "<%=j render :partial => 'share_popover' %>" ;},
+	  content: function(){return ;}
+	});
+	edit_drop.bind('click', function(e) {
+	  e.preventDefault();
+	  $(this).popover('show');
+	});
+	$('#close_popover').live('click', function(){
+		$('#edit_drop').popover('hide');
+	})
+
+});
+
+</script>

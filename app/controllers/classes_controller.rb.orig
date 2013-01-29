@@ -1,0 +1,364 @@
+class ClassesController < ApplicationController
+
+  before_filter :set_action_bar
+  skip_before_filter :require_not_new_user, :only => [:show]
+
+  def index
+    @course = Course.first
+    @classes = @current_user.offerings
+  end
+  
+  def show
+<<<<<<< HEAD
+   if request.xhr?
+    dept_name = params[:dept_name]
+    number = params[:number]
+    offering_id = params[:offering_id]
+    new_course = params[:new_course]
+    new_offering = params[:new_offering]
+    if(new_course == "true") #this is when the user creates a course and an offering
+      render :text => dept_name
+    elsif(new_offering == "true")
+      render :text => dept_name + " " + number
+    elsif(number == 'none') #occurs when user selects department
+      course_nos = Course.select(:number).where(:school_id => @current_user.school.id, :department => dept_name).uniq.collect{|c| c.number }
+      course_nos = course_nos.map{|cn| cn }.sort!
+      course_no_string = ''
+      course_nos.each do |cn|
+        course_no_string << '<option value="' + cn.to_s + '">' + cn.to_s + '</option>'
+      end
+      render :text => course_no_string
+    elsif(offering_id == 'none') #occurs when user select course number
+      @course = Course.where(:department => dept_name, :school_id => @current_user.school.id, :number => number).first
+      prof_ids = Offering.select(:instructor_id).where(:course_id => @course.id).uniq.collect{|c| c.instructor_id }
+      prof_name_string = ''
+      prof_ids.each do |p|
+        prof_name_string << '<option value ="' + p.to_s + '">' + Instructor.find(p).last_name + '</option>'
+      end
+      render :text => prof_name_string
+    else #occurs when user selects professor(aka offering)
+      @course = Course.where(:school_id => @current_user.school.id, :department => dept_name, :number => number).first
+      course_name = Course.select(:title).where(:school_id => @current_user.school.id, :department => dept_name, :number => number).collect{|c| c.title }           
+      course_name = Course.select(:title).where(:school_id => @current_user.school.id).collect{|c| c.title }   
+      #Originally:
+      title = params[:title]
+      if title.nil? #this is for when
+        render :text => dept_name + ' ' + number + ': ' + @course.title
+=======
+    puts "where is tita the dog?"
+    @group_post = false
+   # this block wasn't previously commented out
+    if request.xhr?
+      dept_name = params[:dept_name]
+      number = params[:number]
+      if(number == 'none')
+        course_nos = Course.select(:number).where(:school_id => @current_user.school.id, :department => dept_name).uniq.collect{|c| c.number }
+        course_nos = course_nos.map{|cn| cn }.sort!
+        course_no_string = ''
+        course_nos.each do |cn|
+          course_no_string << '<option value="' + cn.to_s + '">' + cn.to_s + '</option>'
+        end
+        render :text => course_no_string
+>>>>>>> staging
+      else
+        render :text => dept_name + ' ' + number + ': ' + title
+      end
+    end
+    else
+<<<<<<< HEAD
+        @group_post = false
+        @class = Offering.find(params[:id])
+        @course = @class.course
+        @textbook = Textbook.where(:course_id => @course.id).first
+        @classmates = @class.classmates(current_user)
+        @posts = @class.posts.where("post_type <= ?", 'class').recent.top_level
+        #@questions = @class.questions.recent.top_level
+        @questions = find_questions
+        puts "#{@questions}"
+        @shared_study_sessions = @class.study_sessions.viewable_by nil
+        @shared_notes = @class.notes.viewable_by nil
+        flash[:action_bar_message] = @course.title
+=======
+      @class = Offering.find(params[:id])
+      @course = @class.course
+      @textbook = Textbook.where(:course_id => @course.id).first
+      @classmates = @class.classmates(current_user)
+      @posts = @class.posts.where("post_type <= ?", 'class').recent.top_level
+      @questions = @class.questions.recent.top_level
+    #  @questions = @class.questions.recent.top_level.page(params[:page])
+
+      @shared_study_sessions = @class.study_sessions.viewable_by nil
+      @shared_notes = @class.notes.viewable_by nil
+      flash[:action_bar_message] = @course.title
+      
+>>>>>>> staging
+    end
+  end
+  
+  def new
+    @enrollment = Enrollment.new
+    #@offerings = Offering.where(school_id: current_user.school.id).includes(:course, :school, :instructor)
+    #@offerings = current_user.school.offerings.includes(:course, :instructor)
+    @user = @current_user
+    respond_to do |format|
+      if request.xhr?
+        @modal_link_id = params[:link_id]
+      end
+      format.js
+    end
+  end
+  
+  def create
+    department = params[:class][:department]
+    if params[:class_number].blank?
+      number = params[:class][:number].first
+    else
+      number = params[:class_number]
+    end
+    @course = Course.where(:department => department, :number => number.to_s, :school_id => current_user.school.id).first
+    if(@course.nil?)
+      @course = Course.new
+      @course.school = current_user.school
+      @course.department = department
+      @course.number = number.to_s
+      @course.title = params[:class_title]
+    end
+    if (params[:prof] == nil)
+       @professor = Instructor.where(:first_name => params[:prof_first_name], :last_name => params[:prof_last_name]).first
+       if(@professor.nil?)
+         @professor = Instructor.create(:first_name => params[:prof_first_name], :last_name => params[:prof_last_name])
+       end
+       professor_id = @professor.id
+    else
+      professor_id = params[:prof][:number]
+    end
+    @offering = Offering.where(:course_id => @course.id, :instructor_id => professor_id).first
+    if(@offering.nil?)
+      @offering = Offering.new
+      @offering.course = @course
+      @offering.school = current_user.school
+      @offering.instructor_id = professor_id
+      @offering.save
+    end
+    @enrollment = Enrollment.new
+    @enrollment.offering = @offering
+    @enrollment.user = current_user
+    @user = current_user
+    
+    #add the calendar event
+    days = ''
+    days << '1' if(params[:mon] == 'on')
+    days << '2' if(params[:tue] == 'on')
+    days << '3' if(params[:wed] == 'on')
+    days << '4' if(params[:thu] == 'on')
+    days << '5' if(params[:fri] == 'on')
+    
+    @calendar = Calendar.new
+    @calendar.update_attributes({ :days => days, :course_id => @offering.id, :time_start => params[:class_start][:time], :time_end => params[:class_end][:time], :user_id => current_user.id, :course_name => @course.title })
+    
+    if @enrollment.save
+     # current_user.friends.each do |friend|
+     #   message_body = ActivityRenderer.new.generate_message(friend, 'course_add', :user => current_user, :offering => @offering)
+     #   ActivityMessage.create(:user => friend, :body => message_body, :activist => current_user)
+     # end
+      @calendar.save
+      enroll = Enrollment.where(:offering_id => @offering.id)
+      allstuds = [current_user.id.to_s]
+      enroll.each do |enr|
+        allstuds += [enr.user_id.to_s]
+      end
+      Recommendation.populate_user(allstuds)
+      allstuds.shift
+      Recommendation.connect_new(current_user.id, allstuds, 1)
+      if request.xhr? and @offering.verified?
+        #render partial: 'classes/form', :locals => {:user_id => current_user.id}
+        render partial: 'users/course_list', collection: current_user.offerings, as: :offering, :locals => {:wrapper_class => "wrapper_large"}
+      elsif request.xhr?
+        render partial: 'classes/invite_classmates'
+      else
+        redirect_to classes_path
+      end
+      
+    else
+      @user = current_user
+      render action: "new"
+    end
+  end
+
+  def create_questions
+    @question_type = params[:question_type]
+    @class = Offering.find params[:class_id]
+    @question = Question.new
+    @question.user_id = current_user.id
+    @question.text = params[:message]
+    @question.flagged_as = params[:flagged_as]
+    @question.reported = 0
+    if @question_type == 'group'
+      @question.question_type = 'group'
+      @question.group_id = params[:class_id]
+    else
+      @question.question_type = 'class'
+      @question.offering_id = params[:class_id]
+    end
+    if @question.save
+      @offering = Offering.find(params[:class_id])
+      @questions = Offering.find(params[:class_id]).questions.recent.top_level.page(params[:page])
+      puts "dust and bones...right"
+      respond_to do |format|
+       # puts "ajax here"
+        format.js #{ redirect_to "/classes/#{@class.slug}" }
+        format.html #{ redirect_to @class }
+       # format.html
+      end
+    end
+   # push_broadcast(:question_asked, :offering_id => @class.id)
+  end
+
+  def create_answers
+
+    @class = Offering.find params[:class_id]
+    @question_type = params[:question_type]
+    @answer = Answer.new(params[:answer])
+    if @answer_type == 'group'
+      @answer.group_id = params[:group_id]
+    else
+      @answer.offering_id = params[:class_id]
+    end
+    @answer.user = current_user
+    @questions = Offering.find(params[:class_id]).questions.recent.top_level.page(params[:page])
+    @offering = Offering.find(params[:class_id])
+    if @answer.save
+      respond_to do |format|
+        format.js #{ redirect_to "/classes/#{@class.slug}" }
+        format.html #{ redirect_to @class }
+      end
+    end
+  end
+
+  def create_postings
+    @class = Offering.find params[:class_id]
+    @question_type = params[:question_type]
+    @question_id = params[:question_id]
+    @user_id = params[:user_id]
+    @posting = Posting.new(params[:posting])
+    @posting.question_id = @question_id
+    @posting.question_type = @question_type
+    if @posting_type == 'group'
+      @posting.group_id = params[:group_id]
+    else
+      @posting.offering_id = params[:class_id]
+    end
+    @posting.user = current_user
+    @questions = Offering.find(params[:class_id]).questions.recent.top_level.page(params[:page])
+    @offering = Offering.find(params[:class_id])
+    if @posting.save
+      respond_to do |format|
+        format.js #{ redirect_to "/classes/#{@class.slug}" }
+        format.html #{ redirect_to @class }
+      end
+    end 
+  end
+  
+  def invite
+    @offering_id = params[:offering]
+    @offering = Offering.find(@offering_id.to_i)
+    @email = "wir@georgetown.edu" #params[:email] + '@' + current_user.school.domain_name
+    if User.find_by_email(@email)
+      #send one message
+    else  
+      #need a case in here if the signup already exists, ie to delete/ update it
+      @signup = Signup.new
+      @signup.email = @email
+      if @signup.save!
+        Notifier.class_invite_email(@signup, current_user, @offering).deliver
+      else
+        #what to do?
+      end
+    end
+    if params[:done] == "true"
+      debugger
+      render partial: 'users/course_list', collection: current_user.offerings, as: :offering, :locals => {:wrapper_class => "wrapper_large"}
+    else
+      render :nothing => true
+    end
+  end
+  
+  def autocomplete
+    @search = Sunspot.search Course do
+      fulltext params [:title]
+      paginate :page => 1, :per_page => 5
+    end
+    result = @search.results.map {|r|
+      h = {}
+      h[:type] = "Course"
+      h[:label] = truncate(r.title, :length => 30)
+      h[:value] = r.title
+      h
+    }
+    render :json => result.to_json
+  end
+  
+  def update
+  end
+  
+  def destroy
+    @enrollment = @current_user.enrollments.find_by_offering_id params[:id]
+    @enrollment.destroy
+    redirect_to :controller => "home", :action => "index"
+  end
+  
+  def offerings_for_school
+    @school = School.find(params[:school_id], :include => :offerings)
+    @offerings = @school.offerings(:include => [:course, :instructor])
+    
+    if request.xhr?
+      render :json => { :offerings => @offerings.collect {|o| o.course_listing}, :offering_ids => @school.offering_ids }
+    end
+  end
+  
+  def classmates
+    @class = @current_user.offerings.find(params[:class_id])
+    @users = @class.classmates(current_user)
+    @title = "Classmates"
+    render "shared/users_list.js.erb"
+  end
+
+  def view_questions
+    @class = @current_user.offerings.find(params[:class_id])
+    puts "am I here?????"
+    @questions = []
+    @class.questions.each do |question|
+      if question.flagged_as == 'question'
+        @questions << question
+      end
+    end
+    #render :partial => 'questions/list_item.html.erb', :locals => {:questions => @questions, :question_type => 'class'}
+    redirect_to '/home'
+  end
+
+  def view_comments
+    @questions = []
+    @class.questions.each do |question|
+      if question.flagged_as == 'posting'
+        @questions << question
+      end
+    end
+    #render :partial => 'questions/list_item.html.erb', :locals => {:questions => @questions, :question_type => 'class'}
+    redirect_to '/home'
+  end
+  
+
+  def find_questions
+    if params[:filter]
+      @filtered_results = true
+      flash.now[:action_bar_message] = "Filtered questions "
+      questions = Question.filter(params[:filter], @class).recent.top_level 
+#      @questions = @class.questions.recent.top_level
+    else
+      @filtered_results = false
+      @questions = @class.questions.recent.top_level
+    end
+    @questions
+  end
+
+end

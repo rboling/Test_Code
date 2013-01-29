@@ -1,0 +1,23 @@
+<%# if user.buddies.any? %>
+  <div id="facebook_connect_modal">
+    <%= render :partial => 'shared/fb_connect' %>
+  </div>
+<%# end %>
+
+<div class="popover-body">
+  <div class="buddies">
+    <div>
+      <p>Find friends using Facebook and Gmail!</p>
+    </div>
+    <%# if user.buddies.any? %>
+      <a href="#" id="facebook_invite"><%= image_tag "facebook-button.jpeg", height: '40'  %></a>
+      <a href="#" id="gmail_invite" data-controls-modal="gmail_invite_modal" data-backdrop="true" data-keyboard="true"><%= image_tag "gmail-button.png", height: '34' %></a>
+      <%= render :partial => "shared/gmail_modal" %>
+    <%# end %>
+  </div>
+</div>
+
+<div class="popover-footer">  <div class="input clearfix">
+    <%= link_to 'Save', '/home/index', :class => "btn save invite_buddies_save_button" %>
+    <%= link_to "Cancel", "#", :class => "btn close_modal" %>
+</div></div>

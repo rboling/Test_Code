@@ -1,0 +1,48 @@
+
+<% content_for :head do %>
+  <%= tag :meta, property: "fb:app_id", content: APP_CONFIG['facebook']['app_id'] %>
+  <%= tag :meta, property: "og:site_name", content: "StudyHall Staging" %>
+  <%= tag :meta, property: "og:type", content: "studyhallsessiontest:signup" %>
+  <%= tag :meta, property: "og:title", content: "" %>
+  <%= tag :meta, property: "og:url", content: "#{root_url}" %>
+  <%= tag :meta, property: "og:image", content: '/assets/futuristic.jpg' %>
+  <%= tag :meta, property: "og:description", content: "" %>
+<% end %>
+
+<% if flash[:notice] %>
+  <div class="alert alert-message success span7">
+    <a class="close" href="#">×</a>
+    <%= flash[:notice] %>
+  </div>
+<% end %>
+  <div class="single-form">
+    <div class="header"><h1>Welcome Back!</h1></div>
+
+    <%= form_for @user_session, :url => {:action => "create"}, :html => {:class => "form-stacked"} do |f| %>
+		<%= render partial: 'authentications/loginservices' %>
+
+<div style="text-align:center;width:300px">
+<span>Or Use Your StudyHall Account</span>
+</div>
+      <%= f.error_messages %>
+      <div class="clearfix">
+        <%= f.label :email %>
+        <div class="input"><%= f.text_field :email %></div>
+      </div>
+      <div class="clearfix" style="position:relative">
+        <%= f.label :password%>
+        <div class="input"><%= f.password_field :password%></div>
+      </div>
+      <div class="clearfix">
+        <div class="input checkbox"><%= f.check_box :remember_me %></div>
+        <%= f.label :remember_me, :class => 'remember-me-label'%>
+        <%= link_to "Forgot?", new_password_reset_path, :id => "forgot_link" %>
+      </div>
+      <div>
+        <%= f.submit "Log In", :class => "btn primary" %>
+        <%= link_to "Sign Up", new_signup_path, :class => "sign-up" if @current_user.nil? || @current_user.admin? %>
+	  <div>
+    </div>
+  <% end %>
+
+  </div>

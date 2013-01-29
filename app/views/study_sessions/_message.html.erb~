@@ -1,0 +1,3 @@
+<p><%= current_user.title_name %> has invited you to a study session.</p>
+  <p><h1>let's rock and roll</h1></p>
+<%= link_to "Start studying!", study_session %>

@@ -1,0 +1,17 @@
+/* replace the friend request section where it said friend to pending post-request*/
+/* see update.js.erb for explaination/ comments */
+
+$("span#friend_request").delay(2000).html('<%= escape_javascript(link_to "Request Pending", "#", :class => "btn small request_button")%>');
+var popover_attr = {
+  trigger: "manual",
+  placement: "below-right",
+  offset: 23,
+  html: true,
+  title: function(){return "Thanks!";},
+  content: function(){return " \t Your request was successful";}
+};
+
+$("span#friend_request").popover(popover_attr);
+$("span#friend_request").popover("show");
+$('div.inner').addClass('friend_request');
+$('div.popover').delay(1500).fadeOut(600);

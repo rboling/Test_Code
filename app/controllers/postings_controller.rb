@@ -1,0 +1,61 @@
+
+class PostingsController < ApplicationController
+ before_filter :require_user
+
+  def create
+   # @question = Question.find(params[:parent_id])
+    @class = Offering.find params[:class_id]
+    @question_type = params[:question_type]
+    @question_id = params[:question_id]
+    @question = Question.where(:id => @question_id).first
+    @user_id = params[:user_id]
+    @posting = Posting.new(params[:posting])
+    @posting.question_id = @question_id
+    @posting.question_type = @question_type
+    if @posting_type == 'group'
+      @posting.group_id = params[:group_id]
+    else
+      @posting.offering_id = params[:class_id]
+    end
+    @posting.user = current_user
+    if @posting.save
+      if request.xhr?
+        render_questions
+      end
+      logger.debug "did I notify this?"
+      puts "#{@question}"
+      puts "#{class_url(@question.offering)}"
+      puts "am I there dude???"
+     Notifier.new_question_comment(@question, @posting, @question.user, @posting.user).deliver    
+
+     # Notifier.new_question_comment(current_user).deliver
+
+    end
+  end
+
+  def update
+    @posting = Posting.find(params[:id])
+    if @posting.update_attributes params[:posting]
+      Notifier.report_posting(current_user, @posting).deliver if params[:reported]
+      if request.xhr?
+        render_questions
+      end
+    end
+  end
+
+  private
+  
+  def render_questions
+    if @question_type == 'group'
+      @questions = Group.find(params[:group_id]).questions.where("question_type <= ?", 'group').recent.top_level
+    else
+      @questions = Offering.find(params[:class_id]).questions.recent.top_level
+      @offering = Offering.find(params[:class_id])
+    end
+    puts "bash"
+    puts"#{params[:class_id]}"
+    render :partial => '/questions/list_item', :locals => {:questions => @questions, :class_id => params[:class_id], :question_type => 'class'}
+    puts "foobar"
+  end
+
+end

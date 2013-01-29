@@ -1,0 +1,260 @@
+class Notifier < ActionMailer::Base
+  include SendGrid
+  sendgrid_category :use_subject_lines
+  sendgrid_enable :ganalytics, :opentrack
+  add_template_helper(MessagesHelper)
+  
+  default :from => 'no-reply@studyhall.com', :return_path => 'system@studyhall.com'
+
+  default_url_options[:host] = APP_CONFIG["host"]
+ # default_url_options[:host] = "localhost:3000"
+  
+  def sharing(sharing, object_type, user)
+    @sharing = sharing;                                               Rails.logger.debug "*****Sharing: #{sharing}"
+    @object_type = object_type;                                       Rails.logger.debug "*****Object Type: #{object_type}"
+    @sender = user;                                                   Rails.logger.debug "*****Sender: #{user.inspect}"
+    @object_urls_array = @sharing.objects.map {|o| [o,url_for(o)] };  Rails.logger.debug "*****URLs: #{@object_urls_array}"
+    Rails.logger.debug "************* Invoking Mail(#{@sender.name.titleize} #{@sharing.recipient_emails})"
+    mail(
+      subject: "#{@sender.name.titleize} shared something with you on Studyhall.com!",
+      from: "noreply@studyhall.com",
+      bcc: @sharing.recipient_emails,
+      date: Time.now
+    )
+  end
+  
+  def class_invite_email(signup, inviter, offering)
+    @inviter = inviter
+    @signup = signup
+    @offering = offering
+    @url = verify_url(@signup.perishable_token) + "?offering_id=#{@offering.id}"
+    mail(
+      :subject => "#{@inviter.first_name} added you as a classmate",
+      :from => 'noreply@studyhall.com',
+      :to => @signup.email
+    )
+  end
+  
+  def user_class_invite_email(user, inviter, offering)
+    @inviter = inviter
+    @user = user
+    @offering = offering
+    @url = root_url + "/classes/#{@offering.to_param}"
+    mail(
+      :subject => "#{@inviter.first_name} added you as a classmate",
+      :from => 'noreply@studyhall.com',
+      :to => @user.email
+    )
+  end
+
+  def activation_email(signup)
+    @signup = signup
+    @url = verify_url(@signup.perishable_token)
+    
+    mail(
+      :subject => "Welcome to StudyHall!",
+      :from => "welcome@studyhall.com",
+      :to => @signup.email
+    )
+  end
+  
+  # are we going to have one? - YES
+  def welcome_signup_email(signup)
+    @signup = signup
+    mail(
+      :subject => "We will be coming to your school soon!",
+      :from => "noreply@studyhall.com",
+      :to => @signup.email
+    )
+  end
+  
+  # are we going to have one? - don't think so
+  def welcome_user_email(user)
+    @user = user
+    @url = login_url
+    mail(
+      :subject => "Welcome to StudyHall",
+      :from => "noreply@studyhall.com",
+      :to => @user.email
+    )
+  end
+
+  # done
+  def password_reset_instructions(user)
+    @user = user
+    @url = edit_password_reset_url(@user.perishable_token)
+    mail(
+      :subject => "Password Reset Instructions",
+      :from => "noreply@studyhall.com",
+      :to => @user.email,
+      :date => Time.now
+    )
+  end
+
+  def study_session_invite(sender, send_to, study_session)
+    if send_to.privacy_setting.notify_on_session_invite  
+      @send_to, @sender = send_to, sender
+      @url = study_session_url(study_session)
+      mail(
+        :subject => "#{sender.title_name} wants to study with you",
+        :from => "noreply@studyhall.com",
+        :to => @send_to.email,
+        :date => Time.now
+      )
+    end
+  end
+  
+  def report_post(reporter, post)
+    @reporter, @offender, @post = reporter, post.user, post
+    @url = "http://#{APP_CONFIG['host']}#{rails_admin.show_path("posts", @post.id)}"
+    mail(
+      :subject => "#{reporter.title_name} reported a post.",
+      :from => "noreply@studyhall.com",
+      :to => "admin@studyhall.com",
+      :date => Time.now
+    )
+  end
+  
+  def report_message(reporter, message)
+    @offender =  User.find(message.is_a?(Message) ? message.sender_id : message.sent_messageable_id)
+    @reporter, @message = reporter, message
+    @url = "http://#{APP_CONFIG['host']}#{rails_admin.show_path(@message.class.to_s.tableize, @message.id)}"
+    mail(
+      :subject => "#{reporter.title_name} reported a post.",
+      :from => "noreply@studyhall.com",
+      :to => "admin@studyhall.com",
+      :date => Time.now
+    )
+  end
+
+  def user_friend_request(user, requested_user)
+    @requester, @requestee = user, requested_user
+    mail(
+      :subject => "#{user.title_name} wants to be your study buddy.",
+      :from    => "noreply@studyhall.com",
+      :to      => requested_user.email,
+      :date    => Time.now
+    )
+  end
+
+  #when someone asks a new question
+  def new_question(question, recepient)
+    if recepient.privacy_setting.notify_on_new_question  
+      @question, @recepient = question, recepient
+      mail(
+        :subject => "#{@question.user.name} just asked a new question.",
+        :from    => "noreply@studyhall.com",
+        :to      => recepient.email,
+        :date    => Time.now
+      )
+    end
+  end
+
+  # this will be exclusively for answers to a question
+  def new_answer(answer, commenter, author, question)
+    if author.privacy_setting.notify_on_answer
+      @answer, @commenter, @author, @question = answer, commenter, author, question
+      mail(
+        :subject => "#{@commenter.name.titleize} just answered your question.",
+        :from    =>  "noreply@studyhall.com",
+        :to      =>  author.email,
+        :date    =>  Time.now
+      )
+    end
+  end
+  
+  # this is exclusively for comments to a post
+  def new_comment(comment, commenter, author, question)
+    if author.privacy_setting.notify_on_post_comment 
+      @comment, @commenter, @author, @post = comment, commenter, author, question
+      mail(
+        :subject => "#{@commenter.name.titleize} just commented on your post.",
+        :from    =>  "noreply@studyhall.com",
+        :to      =>  author.email,
+        :date    =>  Time.now
+      )
+    end
+  end
+
+  def gmail_invite(name, message, recipient)
+    @name, @message = name, message
+    @url = root_url
+    mail(
+      subject: "#{@name} thinks you're worthy of a Studyhall invite",
+      from:    'noreply@studyhall.com',
+      to:      recipient,
+      date:    Time.now
+    )
+  end
+
+  # no clue what this is for
+  def contact_form(contact)
+    @contact = contact
+    @url = "http://#{APP_CONFIG['host']}#{rails_admin.show_path('contacts', @contact.id)}"
+    mail(
+      subject: "StudyHall Contact Form from [#{@contact.name.titleize}]",
+      from:    'noreply@studyhall.com',
+      to:      APP_CONFIG['contact_form_recipient'],
+      date:    Time.now
+    )
+  end
+
+  def request_note_access(user, note)
+    @user, @note = user, note
+    mail(
+      subject: "#{@user.name} requested access to your note: #{note.name}",
+      from: 'noreply@studyhall.com',
+      to: note.user.email,
+      date: Time.now
+    )
+  end
+  def new_study_session_invite(inviter, invitee, study_session)
+    if invitee.privacy_setting.notify_on_post_comment 
+      @inviter, @invitee, @study_session = inviter, invitee, study_session
+      mail(
+        subject: "A classmate wants to study with you",
+        from:    'noreply@studyhall.com',
+        to:      invitee.email,
+        date:    Time.now
+      )
+    end
+  end
+
+  def new_question_post(question, recepient)
+    if recepient.privacy_setting.notify_on_new_post 
+      @question, @recepient = question, recepient
+      mail(
+        subject: "A classmate posted in your class",
+        from:    'noreply@studyhall.com',
+        to:      recepient.email,
+        date:    Time.now
+      )
+    end
+  end
+
+  def new_question_comment(question, posting, author, recepient)
+    if recepient.privacy_setting.notify_on_post_comment 
+      @question, @posting, @author, @recepient = question, posting, author, recepient
+      mail(
+        subject: "A classmate just commented on your post",
+        from:    'noreply@studyhall.com',
+        to:      recepient.email,
+        date:    Time.now
+      )
+    end
+  end
+
+
+#  def new_question_comment(recepient)
+#    puts "am I even here?"
+#    @recepient = recepient
+#    mail(
+#      :subject => "A classmate just commented on your post",
+#      :from =>    'noreply@studyhall.com',
+#      :to =>      @recepient.email,
+#      :date =>    Time.now
+#    )
+#  end
+
+
+end

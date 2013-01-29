@@ -1,0 +1,112 @@
+<%= form_for user, :remote => true, :html => {:class => "form-stacked with_columns", :id => "edit_personal_info_form", :multipart => true} do |f| %>
+  <%= hidden_field_tag :rel_form, 'affiliations_form' %>
+  <%= hidden_field_tag :com_form, 'affiliations_form' %>
+  <%= hidden_field_tag :other_form, 'affiliations_form' %>
+<div class="popover-body">  <input type="hidden" name="form_id" value="affiliations_form">
+  <div class="clearfix input" id="select_major" style="width:300px; display:inline-block">
+    <%= f.label :major %>
+    <%= f.collection_select :major_ids, Major.all, :id, :name, {:selected => @user.major_ids}, {:multiple => true, 'data-placeholder' => 'Select your majors', :style => 'width:298px'} %>
+  </div>
+  <div id="add_major" style="width:60px; display:inline-block; position:relative; top:-10px">
+	<a id="add_major" style="text-align:center">Major not here?</a>
+  </div>
+  <div id="new_major" class="clearfix input" style="display:none">
+	<%= f.label :add_major %>
+	<input type="text" name="new_major" id="new_major" style="width:300px"/><a id="major_add" class="btn success" style="margin-top:5px; margin-left:10px">Add!</a>
+  </div>
+  <div class="clearfix input grad_year">
+	    <%= f.label :Class_Year %>
+	    <%= f.select("grad_year", %w[2012 2013 2014 2015 2016 2017], {:prompt => "Select Your Class Year"})%>
+  </div>
+  <div class="input" id="select_sport" style="width:300px; display:inline-block">
+    <%= f.label :sports_and_clubs %>
+    <%= f.collection_select :sport_ids, Sport.all, :id, :name, {}, {'multiple' => true, 'data-placeholder' => 'Select your sports', :style => 'width:298px'} %>
+  </div>
+  <div id="add_sport" style="width:60px; display:inline-block; position:relative; top:-10px">
+	<a id="add_sport" style="text-align:center">Club not here?</a>
+  </div>
+  <div id="new_sport" class="clearfix input" style="display:none">
+	<%= f.label :add_club %>
+	<input type="text" name="new_sport" id="new_sport" style="width:300px"/><a id="sport_add" class="btn success" style="margin-top:5px; margin-left:10px">Add!</a>
+  </div>
+  <div class="clearfix input fraternity sorority">
+    <%= f.label :fraternity_or_sorority, fraternity_or_sorority_label(user) %>
+    <%= f.collection_select :frat_sorority_ids, FratSorority.all, :id, :name, {:include_blank => "Not in a #{fraternity_or_sorority_label(user)}"}, {'multiple' => true, 'data-placeholder' => 'Select your frat or sorority'} %>
+  </div>
+</div>
+  <div class="popover-footer" style="border:0;padding-top:0">
+    <div class="input clearfix" style="margin-bottom:0">
+      <%= f.submit "Save", :class => "btn save right" %>
+      <%= link_to "Cancel", "#", :class => "btn close_modal" %>
+    </div>
+  </div>
+<% end %>
+
+<script>
+
+$(document).ready(function(){
+	$('a#add_major').live('click', function(e){
+		e.preventDefault();
+		$('#select_major, #add_major').css('display', 'none');
+		$('#new_major').css('display', 'inline-block');
+	});
+	$('#major_add').live('click', function(e){
+		e.preventDefault();
+		var title = $('input#new_major').val();
+		var form_data = new FormData();
+		form_data.append("major[title]", title);
+		 $.ajax({
+			type: "PUT",
+			processData: false,
+			contentType: false,
+			data: form_data,
+			url: "/users/1/add_major"
+		}).done(function( data ) {
+			if (data != ''){
+				$('select#user_major_ids').append('<option value=' + data +'>' + title +'</option>');
+			}
+			$('option:contains(' + "'" + title + "'" + ')').prop('selected', 'selected');
+			$('#user_major_ids').trigger("liszt:updated");
+			$('#select_major, #add_major').css('display', 'inline-block');
+			$('#new_major').css('display', 'none');
+			$('input#new_major').val('');
+		});
+			
+	});
+	$('a#add_sport').live('click', function(e){
+		e.preventDefault();
+		$('#select_sport, #add_sport').css('display', 'none');
+		$('#new_sport').css('display', 'inline-block');
+	});
+	$('#sport_add').live('click', function(e){
+		e.preventDefault();
+		var title = $('input#new_sport').val();
+		var form_data = new FormData();
+		form_data.append("sport[title]", title);
+		 $.ajax({
+			type: "PUT",
+			processData: false,
+			contentType: false,
+			data: form_data,
+			url: "/users/1/add_sport"
+		}).done(function( data ) {
+			if (data != ''){
+				$('select#user_sport_ids').append('<option value=' + data +'>' + title +'</option>');
+			}
+			$('option:contains(' + "'" + title + "'" + ')').prop('selected', 'selected');
+			$('#user_sport_ids').trigger("liszt:updated");
+			$('#select_sport, #add_sport').css('display', 'inline-block');
+			$('#new_sport').css('display', 'none');
+			$('input#new_sport').val('');
+		});
+			
+	});
+	
+	
+	
+	
+	
+	
+});
+
+</script>

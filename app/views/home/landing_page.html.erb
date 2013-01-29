@@ -1,0 +1,65 @@
+<div id="landing"><header class="header">
+  <h1 class="ir">StudyHall.com</h1>
+  <!--<div id="login_section" class="right">
+<%#= render 'user_sessions/form'%>
+<%#= link_to '/auth/facebook', class: 'auth_provider right' do %>
+      <%#= image_tag 'icons/auth_buttons/little log in.png', alt: 'Facebook' %>
+    <%# end %>
+  </div>-->
+
+
+
+  <div class="browser-quad"></div>
+  <div class="browser-main"></div>
+
+ <!--<div class="zigzag"></div>-->
+</header>
+
+<section class="signup">
+  <div class="container">
+
+      <div class="alert-message info fade" id="danger_message" data-alert="close">
+        <p>
+<%= flash[:error] %>
+</p>
+      </div>
+      <div class="alert-message success fade" id="success_message" data-alert="close">
+        <p>
+<%= flash[:notice] %>
+</p>
+      </div>
+<div id="signup-section">
+    <%= form_for @signup, remote: true, html: {class: "quick-signup form-stacked in"} do |f| %>
+      <div class="input email-container twipsy-true">
+        <%#= f.label :email, "Your Email" %>
+        <%= f.text_field :email, :title => "Email", :class => "required email input_field", :placeholder => 'Email@YourSchool.edu' %>
+      </div>
+        <%= f.submit "Request Beta Access", class: "btn success", :id => "signup_btn" %>
+    <% end %>
+</div>
+
+<!--<div id="ed_rev" class="">
+    <h2 style="text-align:center">The Education Revolution is here. &nbsp;Join Your Classmates now. &nbsp;Free.</h2>
+</div>-->
+
+   </div>
+</section>
+
+<section class="reasons">
+  <header class="container">
+    <h1>Check out why StudyHall is awesome</h1>
+  </header>
+  <section class="content container">
+    <ul class="postits">
+      <li class="notes"><p>Take notes during and after class</p></li>
+      <li class="start"><p>Start and online study group</p><p>Secure your notes in a digital locker</p>
+      <li class="share"><p>Share your notes with buddies or whoever...<br>(sports, clubs, frats, and sororities)</p></li>
+      <li class="work"><p>Work on group projects</p><p>Post lecture notes and questions to classmates</p></li>
+      <li class="meet"><p>Meet up online with people you never though you'd study with</p></li>
+      <li class="login"><p>Log in using your Facebook account and connect with your friends</p></li>
+      <li class="collaborate"><p>Collaborate in real-time with your buddies</p><p>View profiles and meet a new study buddy :)</p></li>
+      <li class="free"><p>:) It's free!</p></li>
+    </ul>
+  </section>
+</section>
+</div>

@@ -1,0 +1,39 @@
+<p>Invite your classmates to verify your course</p>
+
+<p>via StudyHall</p>
+<div class="input">
+    <%= collection_select( :user, :name, current_user.friends, :name, :name, {multiple: true}, {:multiple => true, class: 'large chzn-select'})%>
+</div>
+
+<p> or via FB</p>
+<div class="input">
+	<a href="#" id="fb_invite" class=""><%= image_tag "facebook-button.jpeg", height: '40'  %></a>
+</div>
+<% unless @course == nil %>
+<% message = "'Hey! I just created a page for our class, #{link_to @course.title, class_path(@course)} on #{link_to "StudyHall.com", root_url}. Please click on this link to join our class discussion '" %>
+<% else %>
+<% message = "'Fuck'"%>
+<% end %>
+
+<script>
+$(document).ready(function(){
+	$("#fb_invite").live('click', function(e){
+		FB.init({
+		    appId  : '<%= APP_CONFIG["facebook"]["app_id"] %>',
+			xfbml : true,
+		    status : true,
+		    cookie : true,
+		    oauth: true
+		});
+		FB.ui({
+			method: 'apprequests',
+	      	message: <%= message %>
+	    }, requestCallback);
+	});
+
+	  function requestCallback(response) {
+	    // Handle callback here
+	  }
+});
+
+</script>

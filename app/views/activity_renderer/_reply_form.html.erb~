@@ -1,0 +1,1 @@
+<p><%= user.name %> <%= message %> <b>in reply to</b>: <%= old_message %></p>

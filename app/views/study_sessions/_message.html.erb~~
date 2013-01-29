@@ -1,0 +1,22 @@
+<p><%= current_user.title_name %> has invited you to a study session.</p>
+<<<<<<< HEAD
+<<<<<<< HEAD
+  <p><h1>let's rock and roll</h1></p>
+=======
+=======
+>>>>>>> 4a20e79b4b04e92e6e964520801371ac8437e220
+<<<<<<< HEAD
+  <p><h1>let's rock and roll</h1></p>
+=======
+<% unless @study_session.message.blank? %>
+  <p>"<%= @study_session.message %>"</p>
+<% end %>
+>>>>>>> debug_study_session
+<<<<<<< HEAD
+>>>>>>> master
+=======
+=======
+  <p><h1>let's rock and roll</h1></p>
+>>>>>>> staging
+>>>>>>> 4a20e79b4b04e92e6e964520801371ac8437e220
+<%= link_to "Start studying!", study_session %>

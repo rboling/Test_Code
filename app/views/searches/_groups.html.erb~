@@ -1,0 +1,5 @@
+<%= render :partial =>'sort_form', :locals => {:type => 'group', :keywords => @search.keywords}%>
+<% @search.groups(params[:page] || 1).results.each do |search_result| %>
+  <%= render :partial => "group", :locals => {:group => search_result} %>
+<% end %>
+<%= paginate @search.groups(params[:page] || 1).results, remote: true, params: { category: "groups"} %>

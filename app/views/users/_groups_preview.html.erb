@@ -1,0 +1,53 @@
+<section class="yr-groups-user-profile">
+  <div class="heading">
+    <h5 style="margin-bottom:0px;display:inline"><%= user == current_user ? "Your" : "#{user.first_name}'s" %> Groups</h5>
+    <h5 class="count" style="margin-bottom:0px;display:inline">(<%= user.groups.count %>)</h5>
+  </div>
+  <% if user.groups.any? %>
+    <ul class="groups-list">
+    <% user.groups.take(5).each do |group| %> 
+      <li><h5 class="count"><%= link_to group.group_name, group, :title => group.group_name %></h5></li>
+    <% end %>
+    </ul>
+  <% end %>
+</section>
+<div id="view_all_groups" class="modal" style="display:none">
+  <div class="modal-header">
+    <% if user == current_user %>
+      <h3>Your groups (<span class="total_groups"><%= user.groups.count %></span>)</h3>
+    <% else %>
+      <h3><%= user.first_name %>'s groups</h3>
+    <% end %>
+  </div>
+  <div class="modal-body">
+    <ul>
+      <% user.groups.each do |group| %>
+        <li class="clearfix buddy_list_item <%= cycle('odd','') %>">
+          <div class="left photo">
+            <%= link_to image_tag(group.photo_url(:medium)), group, :title => group.group_name %>
+          </div>
+          <div class="left meta">
+            <%= link_to group.group_name, group %>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="cancel_popover btn">Close</a>
+  </div>
+</div>  
+<script type="text/javascript">
+  $(document).ready(function(){
+    var view_all_groups_modal = $("#view_all_groups").modal({backdrop: true, keyboard: true});
+    $(".yr-groups").delegate("#view_all_groups_button","click",function(e){
+      view_all_groups_modal.modal("show");
+      $("#view_all_groups ul").jScrollPane({hideFocus: true});
+      e.preventDefault();
+    });
+    $("#view_all_groups").delegate(".cancel_popover","click",function(e){
+      $("#view_all_groups").modal('hide');
+      e.preventDefault();
+    });
+  });
+</script>

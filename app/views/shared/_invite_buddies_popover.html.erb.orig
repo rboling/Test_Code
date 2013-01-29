@@ -1,0 +1,50 @@
+<% if current_user.friends.any? %>
+  <div id="facebook_connect_modal">
+    <%#= render :partial => 'shared/fb_connect' %>
+  </div>
+<% end %>
+
+<div class="popover-body">
+  <div class="buddies">
+    <div>
+      <p>Invite your friends using Facebook and Gmail!</p>
+    </div>
+
+      <a href="#" id="facebook_invite"><%= image_tag "facebook-button.jpeg", height: '40'  %></a>
+      <a href="#" id="gmail_invite" data-controls-modal="gmail_invite_modal" data-backdrop="true" data-keyboard="true"><%= image_tag "gmail-button.png", height: '34' %></a>
+      <%= render :partial => "shared/gmail_modal" %>
+
+  </div>
+</div>
+
+<div class="popover-footer" style="border:0;padding-top:0">
+	<div class="input clearfix" style="margin-bottom:0">
+  <% if @tour %>
+    <%= submit_tag "Next", :class => "btn primary tour_button save invite_buddies_save_button right" %>
+  <% elsif @other %>
+    <%= submit_tag "Next", :class => "btn primary tour_button save invite_buddies_save_button right" %>    
+  <% else %>  
+<<<<<<< HEAD
+    <%= link_to 'Save', home_index_path, :class => "btn save invite_buddies_save_button right" %>
+    <%#= submit_tag "Save", :class => "btn save invite_buddies_save_button" %>
+=======
+    <div class="input clearfix">
+      <%= link_to 'Done', '#', :class => "btn save invite_buddies_button" %>
+    </div>
+>>>>>>> lauraDash
+  <% end %> 
+	</div>
+</div>
+
+<script>
+
+<<<<<<< HEAD
+$('.modal').remove();
+$('.modal-backdrop').remove();
+
+</script>
+=======
+$('.invite_buddies_button').live('click', function(){
+	$('.popover').remove();
+});
+>>>>>>> lauraDash

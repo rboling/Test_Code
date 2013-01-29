@@ -1,0 +1,3 @@
+$(".question_activity_list").html('<%=j render partial: '/classes/dummy_thing' %>');
+
+

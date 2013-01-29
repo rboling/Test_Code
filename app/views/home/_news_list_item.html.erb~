@@ -1,0 +1,12 @@
+      <% if current_user.school.present? %>
+        <% if @news_feed.any? %>
+          <% @news_feed.each do |news| %>
+            <li><%= link_to truncate(news.title, length: 120), news.link, title: news.title, target: '_blank' %></li>
+          <% end %>
+          <%= paginate @news_feed, :remote => true %>
+        <% else %>
+          <li><p>No recent news</p></li>
+        <% end %>
+      <% else %>
+        <li><p>No school</p></li>
+      <% end %>

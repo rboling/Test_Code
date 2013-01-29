@@ -1,0 +1,10 @@
+<%= form_tag({:controller => "searches", :action => "sort"}, :remote => true) do %>
+  <%= hidden_field_tag 'keywords', @keywords %>
+  <%= hidden_field_tag 'type', 'note' %>
+    <%= select_tag "n_options", options_for_select([["Note name","name"],["Author name","owner"],["Course title","course"],["Date authored","created"]], ["Note name","name"]) %>
+  <%= submit_tag "Sort", :class => "btn primary"%>
+<% end %>
+<% @search.results.each do |search_result| %>
+  <%= render :partial => "note", :locals => {:note => search_result} %>
+<% end %>
+<%= paginate @search.results, :remote => true%>

@@ -1,0 +1,131 @@
+var button = $("#<%=j @modal_link_id %>");
+button.popover({
+  trigger: "manual",
+  placement: "<%= @group ? "below-left" : "below-right" %>",
+  offset: 10,
+  horizontalOffset: 25,
+  html: true,
+  help: function(){return "<%=j render :partial => 'shared/upload_help' %>";},
+  title: function(){return "Upload a Document";},
+  content: function(){return "<%=j render :partial => 'shared/upload_form' %>";}
+});
+button.popover("show");
+styleFileInputs($('.popover .upload'));
+$("#note_content_hidden_field").val($("#rte_area_note_content").val());
+$("#edit_note_form input[type='text']").first().focus();
+$(".chzn-select").chosen();
+$(".popover").delegate("a.help_button","click",function(e){
+  button.popover("showHelp");
+  e.preventDefault();
+});
+$(".popover").delegate("a.close_help_button","click",function(e){
+  button.popover("hideHelp");
+  e.preventDefault();
+});
+
+$("#upload_note_form").submit(function(e){
+  var file = $("#file_field").val().length > 0;
+  var doc_type = $("#doc_type_field").val().length > 0;
+  if(file && doc_type) {
+    if($("#file_field").val().indexOf(".exe") != -1) {
+      $("#error_field").html("You cannot upload .EXE files.");
+      return false;
+    } else {
+      $("#doc_format_field").removeAttr("disabled");
+      return true;
+    }
+  } else {
+    if(!file) {
+      $("#error_field").html("You must select a file.");
+    } else {
+      $("#error_field").html("Please select a document type.");
+    }
+    return false;
+  }
+  return false;
+});
+
+$("#file_field").change(function(e){
+  var filename = $("#file_field").val();
+  var ext = filename.substr(filename.lastIndexOf('.') + 1);
+  var preservable = ext == "doc" || ext == "odt" || ext == "docx" || ext == "txt";
+  if(preservable) {
+  	$("#doc_format_field").removeAttr("checked");
+    $("#doc_format_field").removeAttr("disabled");
+  } else {
+    $("#doc_format_field").attr("checked", "checked");
+    $("#doc_format_field").attr("disabled", "disabled");
+  }
+});
+
+initWindowResize();
+
+$("#upload_tabs .tabs li").each(function(){
+  var li = $(this);
+  if(li.data("rel") == "1"){
+    var link = li.children().first();
+    if(li.hasClass("active")) {
+      $("#"+link.data("rel")).show();
+    }
+    link.click(function(e){
+      var clicked_link = $(this);
+      $("#upload_tabs .tabs li").removeClass("active");
+      clicked_link.parent().addClass("active");
+      $("#upload_tabs .tab_contents").hide();
+      $("#"+clicked_link.data("rel")).show();
+      //$("#"+clicked_link.data("rel")).jScrollPane();
+      e.preventDefault();
+    });
+  }
+});
+
+var select_groups_modal = $("#view_all_buddies").modal({backdrop: true, keyboard: true});
+$(".select_share").delegate("#select_groups_button","click",function(e){
+  select_groups_modal.modal("show");
+  $("#view_all_buddies ul").jScrollPane({hideFocus: true});
+  e.preventDefault();
+});
+$("#view_all_buddies").delegate(".cancel_modal","click",function(e){
+  $("#view_all_buddies").modal('hide');
+  e.preventDefault();
+});
+
+  var opts = ["select"];
+  for(a in opts) {
+    var target = "#privacy_" + opts[a] + "_check_box";
+    $(target).on("click", function(e) {
+      target = "#" + e.delegateTarget.id;
+      var checked = $(target).attr("checked") != undefined;
+      var sustain = true;
+      for(b in opts) {
+        var other = "#privacy_" + opts[b] + "_check_box";
+        if(other != target && $(other).attr("checked") != undefined) {
+          sustain = false;
+          break;
+        }
+      }
+      if(sustain) {
+        //$(target).attr("checked", "checked");
+      } else {
+        //$(other).removeAttr("checked");
+      }
+      e.stopImmediatePropagation();
+      if($("#privacy_select_check_box").attr("checked") != undefined) {
+        $("#select_buddies_button").css("display", "");
+        $("#select_groups_button").css("display", "");
+      } else {
+        $("#select_buddies_button").css("display", "none");
+        $("#select_groups_button").css("display", "none");
+      }
+    });
+  }
+
+<% current_user.groups.each do |group| %>
+  $("#view_all_buddies").delegate("#group_check_box<%= group.id %>","click",function(e){
+    if($("#group_check_box<%= group.id %>").attr("checked") != undefined) {
+      $("#group_check_box_hidden<%= group.id %>").attr("checked", "checked");
+    } else {
+      $("#group_check_box_hidden<%= group.id %>").removeAttr("checked");
+    }
+  });
+<% end %>

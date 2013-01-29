@@ -1,0 +1,1 @@
+$('#<%= params[:category] == 'users' ? 'people' : params[:category] %>_tab').html("<%= j render(params[:category]) %>");

@@ -1,0 +1,2 @@
+//$(".question_activity_list").html('<%=j render partial: '/questions/list_item' %>');
+$(".question_activity_list").html('<h1>hehe</h1>');

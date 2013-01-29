@@ -1,0 +1,66 @@
+<div id="user_account_page_wrapper">
+  <% if flash[:notice] %>
+    <div class="alert alert-message success span7">
+      <a class="close" href="#">×</a>
+      <%= flash[:notice] %>
+    </div>
+  <% end %>
+    <div class="form_header">
+      <h2 class="left">Your Account</h2>
+      <%= link_to "Delete your account", current_user, method: :delete, :confirm => "Are you sure to delete your account?", :class => "delete_account right" %>
+	<%= link_to "Manage Authentications", authentications_path, class: 'right'%>
+    </div>
+    <div class="clearfix"></div>
+    <div id="user_account_page_inner_wrapper">
+      <%= form_for @user, :html => {:class => "form-stacked with_columns", :multipart => true} do |f| %>
+        <%= f.error_messages %>
+        <div class="clearfix">
+          <%= f.label :password %>
+          <div class="input"><%= f.password_field :password, style: 'width:247px' %></div>
+        </div>
+        <div class="clearfix">
+          <%= f.label :custom_url %> 
+          <div class="input-prepend">
+            <span class="add-on">studyhall.com/</span>
+            <div class="input custom_url"><%= f.text_field :custom_url %></div>
+          </div>
+        </div>
+        <div class="clearfix">
+          <label>PRIVACY SETTINGS</label>
+          <div class="input">
+            <ul class="inputs-list">
+              <li>
+                <label>
+                  <%= f.radio_button :googleable, "1", :checked => @current_user.googleable? %>
+                  <span>Allow my account to be seen by Google</span>
+                </label>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="clearfix">
+          <label>NOTIFY ME BY EMAIL WHEN SOMEONE:</label>
+          <div class="input">
+            <ul class="inputs-list">
+            <% @fields = PrivacySetting.columns.map(&:name)[2,6] %>
+            <% @descriptions = {:notify_on_new_post => "Posts on a course page", :notify_on_post_comment => "Comments on my post", :notify_on_answer => "Posts an answer to my question", :notify_on_new_question => "Asks a new question", :notify_on_new_message => "Sends me a message", :notify_on_session_invite => "Invites me to a study session"} %>
+            <%= f.fields_for :privacy_setting do |privacy_setting| %>
+              <% @fields.each do |field| %>
+                <li> 
+                  <label>
+                    <%= privacy_setting.label "#{@descriptions[field.to_sym]}" %>
+                  </label>  
+                  <%= privacy_setting.check_box "#{field}" %>
+                </li>
+              <% end %>   
+            <% end %>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <%= f.submit "Save", :class => "btn primary" %>
+          <%= link_to "Cancel", @current_user, :class => "btn" %>
+        </div>
+      <% end %>
+    </div>
+</div>

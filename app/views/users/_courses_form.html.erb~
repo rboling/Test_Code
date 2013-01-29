@@ -1,0 +1,38 @@
+<% @enrollment = Enrollment.new %>
+<%= form_for @enrollment, :url => classes_path, :remote => true, :html => {:class => "form-stacked", :'data-type' => "html", :id => "add_course_form"} do |f| %>
+  <div class="popover-body"><% if @enrollment.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@enrollment.errors.count, "error") %> prohibited this contact from being saved:</h2>
+
+      <ul>
+      <% @enrollment.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+    <div class="clearfix">
+      <div class="course_label">
+        <%= f.label :Choose_course %>
+      </div>
+      <table id="dept_num_table">
+        <tr>
+          <td>
+            <div class="input dept_choose" style="width:150px;"><%= select "class", "department", Course.select(:department).where(:school_id => @user.school.id).uniq.order(:department).collect{|c| c.department}, {}, :class => 'chzn-select', :style => 'width:180px;' %></div>
+          </td>
+          <td>
+            <div class="input number_choose" style="width: 120px; position:relative; left: -20px;"><select id="class_number" name="class[number][]" style="width: 130px; visibility:hidden;"></select></div>
+          </td>
+        </tr>
+      </table>    
+    </div>
+    <div id="calendar_partial" style="display:none;">
+      <%= render :partial => 'calendars/course_schedule' %>
+    </div>
+  </div>
+  <div class="popover-footer">
+    <%= f.submit "Submit", :class => "btn primary add_course_final" %>
+    <%= link_to 'Cancel', "#", :class => "btn cancel_course_popover" %>
+  </div>
+<% end %>

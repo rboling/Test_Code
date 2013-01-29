@@ -1,0 +1,10 @@
+<%= form_tag({:controller => "searches", :action => "sort"}, :remote => true) do %>
+  <%= hidden_field_tag 'keywords', @keywords %>
+  <%= hidden_field_tag 'type', 'group' %>
+  <%= select_tag "g_options", options_for_select([["Group name","name"],["Owner","owner"],["Member count","count"]], ["Group name", "name"]) %>
+  <%= submit_tag "Sort", :class => "btn primary"%>
+<% end %>
+<% @search.results.each do |search_result| %>
+  <%= render :partial => "group", :locals => {:group => search_result} %>
+<% end %>
+<%= paginate @search.results, :remote => true%>

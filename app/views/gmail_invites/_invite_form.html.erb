@@ -1,0 +1,41 @@
+<%= form_for @gmail_invite || GmailInvite.new, remote: true, html: {class: 'form-stacked'} do |f| %>
+  <div class="modal-header">
+    <h3>Invite Your Gmail Friends</h3>
+  </div>
+  <div class="modal-body">
+    <!--<div class="clearfix">
+      <%#= f.label :name, "Your Name" %>
+      <div class="input">
+        <%#= f.text_area :name, rows: 1, value: current_user.full_name %>
+      </div>
+    </div>-->
+	<%= f.hidden_field :name, :value => current_user.full_name %>
+    <div class="clearfix">
+      <%= f.label :message, "Your Message" %>
+      <div class="input">
+		<% if current_user.enrollments.any? %>
+			<% @message = "Hey, I just added our class, #{current_user.enrollments.last.offering.course.title}, on StudyHall.com. Visit StudyHall today to sign up and start sharing notes and studying with me!"%>
+		<% else %>
+			<% @message = "Hey, I just joined StudyHall. Visit StudyHall.com today to sign up and start sharing notes and studying with me!"%>
+		<% end %>
+        <%= f.text_area :message, rows: 4, value: @message %>
+      </div>
+    </div>
+    <div class="clearfix">
+      <%= f.label :recipients, "Select Friends to Invite" %>
+      <div class="input contacts_list">
+        <% @gmail_invite.friends.each do |friend| %>
+          <label><input name="gmail_invite[recipients][]" type="checkbox" value="<%= friend.last %>">&nbsp;<%= friend.first %>&nbsp;(<%= friend.last %>)</label>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="clearfix">
+      <div class="input">
+        <%= f.submit 'Send Invites', class: 'btn primary' %>
+        <%= link_to 'Cancel', '#', class: 'btn cancel_popover' %>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,82 @@
+<header class="topbar">
+  <div class="fill">
+    <div class="container">
+      <div class="row">
+        <div class="span3">
+          <h1 class="logo" style="visibility: visible;"><%= link_to "StudyHall Home", home_index_path %></h1>
+        </div>
+        <% controller_name %>
+        <nav class="primary-nav" id="topbar_main_nav">
+        <% if logged_in? %>
+            <ul>
+              <li id="nav_home" <% if controller?("home") %> class='current' <% end %> >
+                <%= link_to home_index_path, title: "Home" do %><span>Home</span><% end %>
+              </li>
+              <li id="nav_studyhalls" <% if controller?("study_sessions") %> class='current' <% end %>>
+                <%= link_to study_sessions_path, title: "Studyhalls" do %><span>StudyHalls</span><% end %>
+              </li>
+              <li id="nav_notes" <% if controller?("notebooks") || controller?("notes") %> class='current' <% end %>>
+                <%= link_to notes_path, title: "Documents" do %><span>Take Notes</span><% end %>
+              </li>
+              <li id="nav_profile" <% if controller?("users") && action?("show") %> class='current' <% end %>>
+                <%= link_to user_path(current_user), title: "Profile" do %><span>Profile</span><% end %>
+              </li>
+	      <li id="nav_calendar" <% if controller?("calendars") %> class='current' <% end %>>
+		<%= link_to calendars_path, title: "Calendars" do %><span>Calendar</span><% end %>
+	      </li>
+              <li id="nav_inbox" <% if controller?("messages") %> class="current {inbox_class}" <% end %> >
+                <%= link_to mailbox_path(:mailbox => "inbox"), title: "Inbox" do %>
+                  <small class="inbox_message_count <%= 'hide' unless inbox_count != ''%>"><%= inbox_count %></small>
+                  <span>Inbox</span>
+                <% end %>
+              </li>
+            </ul>
+        <% end %>
+        </nav>
+        <% if @current_user %>
+          <div class="span4" style="width:180px">
+            <%= form_for Search.new, :url => searches_path do |f| %>
+              <%= f.text_field :keywords, :placeholder => "Search",:id => "topbar_keywords", :class => "ui-autocomplete-input" %>
+            <% end %>
+          </div>
+        <% end %>
+        
+        <% if params[:controller] != 'user_sessions' %>
+          <div class="right">
+            <% if @current_user %>
+            <ul class="nav secondary-nav">
+              <li class="dropdown" data-dropdown="dropdown">
+                  <%= link_to(image_tag(@current_user.avatar_url(:thumb), :class => "avatar_thumb")+"   You", "#", :class => "dropdown-toggle")  %>
+                  <ul class="dropdown-menu">
+                    <div class="arrow-border"></div><div class="arrow"></div>
+                    <li><%= link_to "Profile", @current_user %></li>
+                    <li><%= link_to "Study", study_sessions_path %></li>
+                    <li><%= link_to "Documents", notes_path %></li>
+                    <li><%= link_to "Messages", mailbox_path(:mailbox => "inbox") %></li>
+                    <li><%= link_to "Groups", groups_path %></li>
+                    <li><%= link_to "Account", user_account_path(current_user) %></li>
+                    <%- if @current_user.admin? %>
+                      <%= render :partial => "/layouts/admin_options"%>
+                    <% end %>
+                    <li class="divider"></li>
+                    <li><%= link_to "Logout", logout_path %></li>
+                  </ul>
+              </li>
+            </ul>
+            <ul class="nav secondary-nav">
+              <li class="notifications">
+                <%= link_to(image_tag(@current_broadcasts.empty? ? "notifications_none.png" : "notifications_some.png"), broadcast_index_path, :id => "notifications_link_id", :class => "dropdown-toggle", :remote => true)  %>
+				<small class="<%= 'hide' if @current_broadcasts.empty? %>"><%= @current_broadcasts.count %></small>
+                <span style="display:none"></span>
+              </li>
+              <li style="display:none"></li>
+            </ul>
+            <% else %>
+              <%= link_to "Log In", login_path, class: "login-button" %>
+            <% end %>
+          </div>
+       <% end %> 
+      </div>
+    </div>
+  </div>
+</header>

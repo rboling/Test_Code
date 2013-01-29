@@ -1,0 +1,35 @@
+$("#new_sharing").replaceWith("<div class=\"alert-message success\" style=\"width:310px\"><p><strong>Success!</strong></p></div>");
+setTimeout("$(\".popover\").remove();",3000);
+
+
+/*alert("in the update.js.erb");
+var butt = $("#share_button");
+butt.popover({trigger: "manual",
+  placement: "below-right",
+  offset: 10,
+  horizontalOffset: 25,
+  html: true,
+  title: function(){return "Share this note";},
+  content: "does this work?"
+});
+//button.attr('data-content', "content");
+
+//butt.popover("show");
+alert("does it get here?");
+
+jQuery(function() {
+  $('form').on('click', '.remove_fields', function(event) {
+    $(this).prev('input[type=hidden]').val('true');
+    $(this).closest('tr').hide();
+    return event.preventDefault();
+  });
+  $('form').on('click', '.add_fields', function(event) {
+    var regexp, time;
+    time = new Date().getTime();
+    regexp = new RegExp($(this).data('id'), 'g');
+    $('#ptable tr:last').after($(this).data('fields').replace(regexp, time));
+    $("select.chzn-select").data("placeholder", "Select Friends").chosen();
+    return event.preventDefault();
+  });
+});
+*/

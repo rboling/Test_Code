@@ -1,0 +1,9 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
+<p style="font-size: 12px;">just started a study session</p>
+=======
+<p style="font-size: 12px;">just started a <%= link_to "study session", study_session %></p>
+>>>>>>> layout_changes_for_ie
+=======
+<p style="font-size: 12px;">just started a study session</p>
+>>>>>>> lauraDash

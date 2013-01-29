@@ -1,0 +1,58 @@
+<%= form_for @enrollment, :url => classes_path, :remote => true, :html => {:class => "form-stacked", :'data-type' => "html", :id => "add_course_form"} do |f| %>
+  <div class="popover-body"><% if @enrollment.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@enrollment.errors.count, "error") %> prohibited this contact from being saved:</h2>
+      <ul>
+      <% @enrollment.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+    <div class="clearfix">
+      <div class="course_label">
+        <%= f.label :Choose_course %>
+      </div>
+      <table id="dept_num_table" style="border:0;margin-bottom:0;">
+        <tr>
+          <td style="border:0; width:150px">
+			<% if @user.school %>
+            <div class="input dept_choose" style="width:100px;"><%= select "class", "department", Department.select(:name).where(:school_id => @user.school.id).uniq.order(:name).collect{|c| c.name}, {:include_blank => "Dept"}, :class => 'chzn-select', :style => 'width:130px;' %></div>
+			<% end %>
+          </td>
+          <td style="border:0">
+            <div class="input number_choose" style="width: 120px; position:relative; left: -20px;"><select id="class_number" name="class[number][]" style="width: 130px; visibility:hidden;"></select></div>
+          </td>
+		  <td style="border:0; cellpadding:0; cellspacing:0; margin-left:-5px; padding:0">
+			<div id="course_not_here" class="hidden" style="width:50px"><a id="new_course" href="#" style="font-size:12px">Add New Course No. Here</a></div>
+		  </td>
+		</tr>
+		<tr style="border:0; width:180px;display:none" class="prof_section">
+			<td style="border:0">
+				<div class="input prof_choose" style="width:180px;"><select id="prof_number" name="prof[number][]" style="width: 180px;"></select></div>
+			</td>
+			<td style="border:0">
+				<div id="offering_not_here"><a id="new_offering" href="#">Professor not here?</a></div>
+			</td>
+		</tr>
+      </table>
+    </div>
+	<div id="new_course_partial" style="display:none">
+		<%= render 'classes/new_course_form' %>
+	</div>
+	<div id="add_professor_partial" style="display:none">
+		<%= render 'classes/add_professor_form' %>
+	</div>
+    <div id="calendar_partial" style="display:none;">
+      <%= render 'calendars/course_schedule' %>
+    </div>
+  </div>
+  <div class="popover-footer" style="height:30px; padding-top:0;border:0">
+	 <%= link_to 'Cancel', "#", :class => "btn right cancel_course_popover" %>
+    <%= f.submit "Submit", :class => "right btn primary submit", :style => 'margin-right:10px' %>
+	<%= link_to "Continue", "#", :class => "right btn primary continue hidden", :style => 'margin-right:10px' %>
+	<%= link_to "Continue", "#", :class => "right btn primary add_new_prof hidden", :style => 'margin-right:10px' %>
+   
+  </div>
+<% end %>

@@ -1,0 +1,5 @@
+<p><%= current_user.title_name %> has invited you to a group.</p>
+<% unless @group_invite.message.blank? %>
+  <p>"<%= @group_invite.message %>"</p>
+<% end %>
+<%= link_to "Join Group!", "/groups/#{@group.id}/add_members/#{@group.id}" %>

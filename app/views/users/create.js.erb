@@ -1,0 +1,46 @@
+<% if @user.new_record? %>
+  <% @user.errors.each do |attr,error| %>
+    $('#info_message').removeClass('in');
+    $('#new_user').addClass('in');
+    $("#user_<%= attr.to_s %>")
+      .attr('title','<%= attr.to_s %> <%= error %>' )
+      .twipsy({placement: "below", trigger: "manual", animate: false, offset: 2})
+      .twipsy("show");      
+  <% end %>
+<% else %> 
+  $('.twipsy').hide();
+  $("#new_user").remove();
+  <% if flash[:notice].present? || flash[:error].present? %>
+    $("#success_message").addClass('in').html('<p><%= flash[:notice] || flash[:error] %></p>');
+  <% else %>
+    $("#success_message").addClass('in');
+  <% end %>
+<% end %>
+
+alert("hi1!");
+<% if @signup.new_record? %>
+alert("first if");
+  <% @signup.errors.each do |attr,error| %>
+    $('#info_message').removeClass('in');
+    $('#success_message').addClass('in');
+    $('#new_signup').addClass('in');
+    $("#signup_<%= attr.to_s %>")
+      .attr('title','<%= attr.to_s %> <%= error %>' )
+      .twipsy({placement: "below", trigger: "manual", animate: false, offset: 2})
+      .twipsy("show");
+  <% end %>
+<% end %>
+<% if !@signup.new_record? %>
+  $("#success_message").addClass('in');
+  alert("hi2");
+  $('.twipsy').hide();
+  $("#new_signup").remove();
+<% debugger %>
+  $('#success_message').addClass('in');
+  <% if flash[:notice].present? || flash[:error].present? %>
+    $("#success_message").addClass('in').html('<p><%= flash[:notice] || flash[:error] %></p>');
+  <% else %>
+    $("#success_message").addClass('in');
+  <% end %>
+<% end %>
+

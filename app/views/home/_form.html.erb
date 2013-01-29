@@ -1,0 +1,12 @@
+<%= form_for user, :url => '/users/create_activity/#{current_user.id}', method: :post, :remote => true, :html => {:class => "form-stacked", :id => "activity_form", 'data-placeholder' => 'share with your friends', :style => "padding-left: 0px; height:100px"} do |f| %>
+
+          <%= text_area_tag :message, nil, :rows => 5, :id => "activitytext", :placeholder => 'Share with your classmates..', :maxlength => "111" %>
+    <div id="rock_rock_till_you_drop" style="margin-top: 10px;">
+      <%= f.submit "Share!", :class => "btn success right", :id => "god_bless_you_please_mrs_robinson"%>
+    </div>
+    <div id="text_warning" style="display: none; font-size: 10px;">
+      <small>Posts must contain fewer than 110 characters</small>
+    </div>
+<% end %>
+
+

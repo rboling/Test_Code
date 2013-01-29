@@ -1,0 +1,18 @@
+<% if f.object.user_id != nil and User.find_by_id(f.object.user_id) == @permission_set.note.user%>
+<tr>
+  <td style="color:black;"><%= User.find_by_id(f.object.user_id).name + " (owner)"%></td>
+  <td><%= f.check_box :can_view, :disabled => true %></td>
+  <td><%= f.check_box :can_edit, :disabled => true %></td>
+  <td><%= f.check_box :can_copy, :disabled => true %></td>
+  <td></td>
+</tr>
+<% else %>
+<tr>
+  <td style="color:black;"><%= User.find_by_id(f.object.user_id).name if f.object.user_id != nil%></td>
+  <td><%= f.check_box :can_view, :disabled => true %></td>
+  <td><%= f.check_box :can_edit %></td>
+  <td><%= f.check_box :can_copy %></td>
+  <td><%= f.hidden_field :_destroy %>
+	  <%= link_to "remove", '#', class: "remove_fields" %></td>
+</tr>
+<% end %>

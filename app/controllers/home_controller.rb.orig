@@ -1,0 +1,66 @@
+class HomeController < ApplicationController
+
+  before_filter :require_user, only: [:index]
+
+
+#  caches_page :landing_page
+
+  
+  def index
+    #unless params[:request_ids].nil?
+    #  params[:request_ids].split(",").each do |request|
+    #    @fb_request = FacebookRequest.find_by_request_id(request)
+    #    if @fb_request != nil
+    #      redirect_to "/classes/#{@fb_request.offering.to_param}"
+    #    end
+    #  end
+      
+    #else
+      
+    #Rails.logger.info(params[:request_ids])
+    if !(defined? session[:ep_sessions])
+      session[:ep_sessions] = {}    
+    end
+    #@notebooks = @current_user.notebooks
+    #@unsorted_notes = @current_user.notes.unsorted
+    @enrollment = Enrollment.new
+    #@offerings = current_user.school.offerings.includes(:course, :instructor)
+    @user = @current_user
+<<<<<<< HEAD
+    @activities = current_user.activity.page(params[:page]).per(50)
+    @news_feed = current_user.school.rss_entries.order('created_at DESC').page(params[:page]).per(50)
+=======
+    #puts "#{current_user.school.rss_entries}"
+    @activities = current_user.activity.page(params[:page]).per(20)
+    puts "past activities feed"
+    @news_feed = current_user.school.rss_entries.order('created_at DESC').page(params[:page]).per(20)
+    puts "#{params[:page]}"
+>>>>>>> lauraDash
+    unless current_user.profile_complete?
+      flash.now[:notice] = "Your profile is #{current_user.profile_completion_percentage}% complete!"
+    end
+    check_tour_mode
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+
+  def ping
+    Rails.cache.fetch('ping') do
+      @ping = RssEntry.first
+    end
+  end
+
+  def landing_page
+    @user_session = UserSession.new
+    @signup = Signup.new
+    render layout: "landing"
+  end
+
+  protected
+    
+    def check_tour_mode
+      @tour = true if params[:tour] == 'true'
+    end
+end

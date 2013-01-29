@@ -1,0 +1,19 @@
+<% unless posting.new_record? || current_user.blocked?(posting.user)%>
+  <li class="posting_item">
+    <div class="class_posting">
+      <div class="left" style="width:25px; height:25px; margin-top:5px;margin-right:5px">
+        <% if posting.user %>
+          <%= link_to image_tag(posting.user.avatar_url(:thumb)), posting.user %>
+        <% else %>
+          <%= link_to image_tag("/assets/generic_avatar_thumb.png"), user_missing %>
+        <% end %>
+      </div>
+      <div class="posting_details left">
+        <%= posting.user ? link_to(posting.user.title_name, posting.user) : user_missing %> 
+        <span class="posting_time"><%= time_ago_in_words posting.created_at %> ago</span> <br/>
+        <%= auto_link("#{posting.text}") %>
+      </div>
+      <%= render partial: "questions/utilities", locals: {question: posting} %>
+    </div>
+  </li>
+<% end %>

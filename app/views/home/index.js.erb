@@ -1,0 +1,12 @@
+$("#activity_form").reset();
+$('#activity_here').append('<%= j render("users/list_item") %>');
+<% if @activities.next_page %>
+  $('.pagination').replaceWith('<%= j will_paginate(@activities) %>');
+<% else %>
+  $('.pagination').remove();
+<% end %>
+
+  
+
+
+

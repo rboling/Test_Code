@@ -1,0 +1,14 @@
+<%= form_for user, :remote => true, :html => {:class => "form-stacked with_columns", :id => "edit_personal_info_form", :multipart => true} do |f| %>
+  <div class="popover-body">
+  <div class="ui-widget">
+  <%= hidden_field_tag :rel_form, 'course_form' %>
+  <%= hidden_field_tag :com_form, 'course_form' %>
+  <%= hidden_field_tag 'course_id' %>
+  <%= text_area_tag :offkeywords, nil, :id => "offkeywords", :class => "ui-autocomplete-input",:placeholder => 'Add a course', :size => "10x4" %>
+  </div>
+  </div>
+  <div class="popover-footer">
+    <%= f.submit "Submit", :class => "btn save" %>
+    <%= link_to 'Cancel', "#", :class => "btn close_modal" %>
+  </div>
+<% end %>

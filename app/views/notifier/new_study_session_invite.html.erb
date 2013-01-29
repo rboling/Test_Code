@@ -1,0 +1,3 @@
+<p>
+	<%= link_to @inviter.name.titleize, "http://#{APP_CONFIG['host']}/" + @inviter.custom_url %> wants to study with you.  Click <%= link_to "here", study_session_url(@study_session) %> to join them.
+</p>

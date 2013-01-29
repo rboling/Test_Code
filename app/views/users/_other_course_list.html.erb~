@@ -1,0 +1,10 @@
+<li data-rel="<%= class_url(course) %>" id="course_<%= course.id %>" class="linked_item course">
+  <div id="course_span_div" style="margin-top: 30px;">
+  <span class="help" title="<%= course.course.title %>" style="height: 90%;"><%= truncate(course.course.title, :length => 14) %></span>
+  </div>
+
+  <%= link_to "", "", :class => "show_title", :title => course.course.title %>
+  <% if current_user %>
+    <%= link_to "", user_drop_class_in_profile_path(:user_id => current_user.id, :offering_id => course.id), method: :delete, confirm: "Are you sure?" %>                
+  <% end %>
+</li>

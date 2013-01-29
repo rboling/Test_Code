@@ -1,0 +1,521 @@
+// User Settings
+
+#user_account_page_wrapper
+  width: 500px
+  margin: 0 auto
+  .form_header
+    h2
+      width: 250px
+  .delete_account
+    margin-top: 16px
+  #user_account_page_inner_wrapper
+    width: 310px
+    margin: 0 auto
+    padding: 40px 98px
+    border: 1px solid #D4D4D4
+    form
+      .custom_url
+        input
+          width: 140px
+.users-edit
+  #profile_sidebar
+    .sidebar_photo
+      text-align: center
+      img
+        width: 280px
+  .courses
+    width: 645px
+.users-show
+  .profile_edit
+    background-color: $editable_background
+    cursor: pointer 
+
+  .sidebar_photo
+    text-align: center
+
+  .edit_button
+    display: inline-block
+    &.edit
+      display: none
+
+  #profile_sidebar
+    margin-top: 17px
+    section
+      h5
+        display: inline
+      .heading
+        margin-bottom: 10px
+      .view
+        float: right
+        margin-top: 5px
+    .yr-groups-user-profile
+      .modal-body
+        display: none
+      h5
+        margin-bottom: 0px
+      li
+        margin-left: 10px
+        h5
+          margin-bottom: 0px
+          font-size: 15px
+        a
+          color: #404040
+          &:hover
+            color: #249EE8
+    .profile_photo
+      text-align: center
+      position: relative
+      .photo_wrapper
+        width: 280px
+        height: 280px
+        overflow-y: hidden
+        margin-bottom: 5px
+        img
+          max-width: 280px
+          max-height: 280px
+      a
+        display: none
+      &.edit
+        background: $editable_background
+        margin-bottom: 5px
+        a
+          display: block
+        #delete_photo
+          text-indent: -100000px
+          bottom: 25px
+          right: 5px
+          height: 25px
+          width: 25px
+          background: url(asset-path('delete_photo.png','image')) center no-repeat
+
+  .profile_main_content
+    margin-top: 42px
+
+    #profile_personal_info
+      width: 370px
+      margin-right: 20px
+      &.edit
+        background: $editable_background
+        padding: 5px
+      #name_section
+        &.edit
+          background: $editable_background
+    
+    #affiliations_section 
+      &.edit
+        background: $editable_background
+      h5
+        margin-bottom: 0px
+        margin-top: 3px
+        margin-right: 15px
+        font-size: 15px
+        display: inline
+      ul
+        margin-left: 0px
+        div
+          div
+            display: inline-block
+            vertical-align: top
+            width: 220px
+            margin-top: 4px
+            float: right
+            word-wrap: break-word
+            max-height: 150px
+            overflow-y: hidden
+    #bio_section
+      h5
+        margin-bottom: 0px
+        margin-top: 3px
+        margin-right: 15px
+        font-size: 15px
+        display: inline
+      div
+        display: inline-block
+        vertical-align: top
+        width: 220px
+        margin-top: 4px
+        float: right
+        word-wrap: break-word
+        max-height: 150px
+        overflow-y: auto
+      .clearfix
+        margin-bottom: 10px
+      margin-bottom: 10px
+      &.edit
+        background: $editable_background
+        padding: 5px
+        width: 370px
+        min-height: 150px
+        
+    #course_section
+      &.edit
+        background: $editable_background
+        padding: 5px
+                
+
+    #courses_section
+      margin-bottom: 10px
+      &.edit
+        background: $editable_background
+        padding: 5px
+        width: 370px
+        min-height: 50px
+
+    .profile_ratings
+      width: 250px
+      a.help
+        cursor: default
+      .rating_block
+        background-color: $rating_block_background
+        height: 102px
+        width: 81px
+        margin-bottom: 30px
+        padding: 10px
+        &.gpa
+          text-align: center
+          &.edit
+            background: $editable_background
+          .gpa_score
+            +h3 
+            display: block
+            margin: 30px 0 0 0
+            color: $headings 
+          a.help
+            +opacity(50)
+            display: inline-block
+            height: 16px
+            width: 16px
+            margin: 10px 31px 0
+            background-image: url(asset-path('help_bw.png','image'))
+            &:hover
+              +opacity(100)
+
+        &.rating
+          text-align: center
+          .net_rating
+            +h3 
+            display: block
+            margin: 30px 0 0 0
+            color: $headings 
+          span
+            margin-bottom: 10px
+            display: block
+          .vote_actions
+            a
+              +opacity(50)
+              display: inline-block
+              height: 16px
+              width: 16px
+              &.current_vote
+                +opacity(100)
+              &:hover
+                +opacity(100)
+              &.downvote
+                background-image: url(asset-path('delete_bw.png','image'))
+                &:hover
+                  background-image: url(asset-path('delete.png','image'))
+              &.help
+                margin: 0 12px
+                background-image: url(asset-path('help_bw.png','image'))
+              &.upvote
+                background-image: url(asset-path('add_bw.png','image'))
+                &:hover
+                  background-image: url(asset-path('add.png','image'))
+
+      .profile_edit
+        background-color: $editable_background
+
+      .gpa
+        margin-right: 15px
+
+      .stats 
+        li
+          background-color: $zebraStriping
+          border-bottom: 1px solid $zebraBorder
+          font-size: 12px
+          font-weight: 300
+          line-height: 37px
+
+          &:nth-child(even) 
+            background-color: $white
+          &:last-child
+            border: none
+          
+        .count 
+          font-size: 14px
+          width: 35px
+          padding-right: 15px
+          text-align: right
+
+    #profile_user_items
+
+      #profile_tabs
+        .tabs
+          li
+            &.active
+              a
+                margin-top: 4px
+        &.edit
+        ul
+          float: none
+          width: auto 
+          margin-left: 5px
+          &.tab_contents
+            margin: 0 0 0 0px
+            .linked_item
+              +box-sizing(border-box)
+              float: left
+              display: block
+              height: 156px 
+              margin: 0 20px 20px 0 
+              padding: 0 15px 0 30px
+              width: 132px
+              text-align: center
+              cursor: pointer
+              &.course
+                &.edit
+                background: url(asset-path('notebook-sprite.png','image')) -264px 0px no-repeat transparent
+                &.blue
+                  background-position: -120px -3px                  
+                &.green
+                  background-position: -240px -3px
+                &.red
+                  background-position: 0 -3px
+                a.show_title
+                  +opacity(50)
+                  display: inline-block
+                  height: 16px
+                  width: 16px
+                  margin: 10px 31px 0
+                  background-image: url(asset-path('help_bw.png','image'))
+                  &:hover
+                    +opacity(100)
+
+
+              a.show_title
+                +opacity(50)
+                display: inline-block
+                height: 16px
+                width: 16px
+                margin: 10px 31px 0
+                background-image: url(asset-path('help_bw.png','image'))
+                &:hover
+                  +opacity(100)
+
+
+
+
+                li.notebook_list_item
+                  margin: 0
+                  a
+                    span
+                      font-size: 16px
+                    .help
+                      +opacity(50)
+                      display: inline-block
+                      height: 16px
+                      width: 16px
+                      margin: 10px 31px 0
+                      background-image: url(asset-path('help_bw.png','image'))
+                      &:hover
+                        +opacity(100)
+
+
+
+
+
+
+
+
+              &.note
+                background: url(asset-path('notebook-sprite-grey.png','image')) no-repeat -790px 0px transparent
+                padding: 35px 15px 0 17px
+                text-align: center
+                img
+                  float: left
+                  margin-top: -25px
+                  height: 20px
+                .unlocked
+                  background: url(asset-path('lock_sprite.png','image')) -50px 0 no-repeat
+                .locked
+                  background: url(asset-path('lock_sprite.png','image')) -35px 0 no-repeat
+                span
+                  display: block
+                  word-wrap: break-word
+                  color: #333
+                  vertical-align: top
+                  width: 100px
+                  margin-top: 7px
+                  a
+                    color: #333
+                  &.unlocked
+                    margin-top: -25px !important
+                    height: 15px
+                  &.locked
+                    margin-top: -25px !important
+                    height: 15px
+                    width: 15px
+                &.request_access
+                  background: url(asset-path('notebook-sprite-grey.png','image')) no-repeat -920px 0px transparent !important
+              &.study_session
+                padding-top: 15px
+                .attendees
+                  margin: 0
+                .date
+                  color: #707070
+                  height: auto
+                  display: block 
+              span
+                color: #FFF
+                display: table-cell
+                height: 150px      
+                vertical-align: middle
+                word-break: break-word
+              &:hover
+                span, a.name
+                  text-decoration: underline
+            li.add
+              width: 115px
+              height: 145px
+              float: left
+              display: block
+              margin: 2px 20px 20px 8px
+              border: 2px dashed #91CEF3
+              background: #F4F9FC
+              -webkit-border-radius: 2px
+              span
+                position: absolute
+                width: 119px
+                height: 149px
+                color: #249EE8
+                text-align: center
+                line-height: 145px
+                vertical-align: middle
+                font: 18px Chennai Slab Medium
+            &.scrollPane
+              height: 400px
+              width: 645px
+            &.course_list_user_profile
+              .course
+                a
+              li.notebook_list_item
+                margin: 0
+                a
+                  span
+                    font-size: 16px
+                  //display: none
+              &.edit
+                background-color: $editable_background
+                .course
+                  position: relative
+                  a
+                    display: block
+                    width: 16px
+                    height: 16px
+                    background: url(asset-path('delete.png','image'))
+                    position: absolute
+                    bottom: 5px
+                    right: 5px
+          &.tab_contents2
+            margin: 0 0 0 -5px
+            .linked_item 
+              +box-sizing(border-box)
+              float: left
+              display: block
+              height: 156px 
+              margin: 0 20px 20px 0 
+              padding: 0 15px 0 30px
+              width: 132px
+              text-align: center
+              cursor: pointer
+              &.course
+                background: url(asset-path('notebook-sprite.png','image')) -264px 0px no-repeat transparent
+                &.blue
+                  background-position: -120px -3px                  
+                &.green
+                  background-position: -240px -3px
+                &.red
+                  background-position: 0 -3px
+                a.show_title
+                  +opacity(50)
+                  display: inline-block
+                  height: 16px
+                  width: 16px
+                  margin: 10px 31px 0
+                  background-image: url(asset-path('help_bw.png','image'))
+                  &:hover
+                    +opacity(100)                
+              &.note
+                background: url(asset-path('notebook-sprite.png','image')) no-repeat -790px 0px transparent
+                padding: 35px 15px 0 17px
+                text-align: center
+                span
+                  display: block
+                  word-wrap: break-word
+                  color: #333
+                  vertical-align: top
+                  width: 100px
+              &.study_session
+                padding-top: 15px
+                .attendees
+                  margin: 0
+                .date
+                  color: #707070
+                  height: auto
+                  display: block 
+              span
+                color: #FFF
+                display: table-cell
+                height: 150px      
+                vertical-align: middle
+                word-break: break-word
+              &:hover
+                span, a.name
+                  text-decoration: underline
+            &.scrollPane
+              height: 400px
+              width: 645px
+            &.course_list
+              .course
+                a
+                  display: none
+              &.edit
+                background-color: $editable_background
+                .course
+                  position: relative
+                  a
+                    display: block
+                    width: 16px
+                    height: 16px
+                    background: url(asset-path('delete.png','image'))
+                    position: absolute
+                    bottom: 5px
+                    right: 5px
+
+                    .help
+                      +opacity(50)
+                      display: inline-block
+                      height: 16px
+                      width: 16px
+                      margin: 10px 31px 0
+                      background-image: url(asset-path('help_bw.png','image'))
+                      &:hover
+                        +opacity(100)         
+
+
+
+
+
+
+
+.password_resets-new
+  form.form-stacked 
+    input.primary
+      width: 120px
+/* this is for the friend request popovers, the jquery is in the friendships view under create and update.js.erb*/
+.popover
+  .inner
+    &.friend_request
+      width: 300px !important
+      .content
+        text-align: center !important

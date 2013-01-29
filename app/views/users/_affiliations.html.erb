@@ -1,0 +1,47 @@
+<div>
+  <ul>
+    <div>
+      <h5>School</h5>
+      <div><%= html_school_name_for(user).html_safe %></div>
+    </div>
+    <div class="clearfix"></div>
+    <div>
+      <h5>Graduation Year</h5>
+		<% unless @user.grad_year.blank? %>
+      <div><%= generate_group_links_for(user, user.grad_year.to_s).html_safe %></div>
+		<% end %>
+    </div>
+    <div class="clearfix"></div>
+    <% unless @user.majors.blank? %>
+    <div>
+      <% if user.majors.count > 1 %>
+        <h5>Majors</h5>
+      <%else%>
+        <h5>Major</h5>
+      <%end%>
+      <div>
+      <%= html_major_string_for(user).html_safe %>
+      </div>
+    </div>
+    <%end%>
+    <div class="clearfix"></div>
+    <% unless @user.frat_sororities.blank? %>
+    <div>
+      <h5>Fraternity/Sorority</h5>
+      <div> 
+      <%= generate_group_links_for(user, user.frat_sororities.map(&:name).first).html_safe %>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <% end %>
+    <% unless @user.sports.blank? %>
+    <div>
+      <h5>Activities</h5>
+      <div> 
+      <%= html_sports_for(user).html_safe %>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <% end %>
+  </ul>
+</div>

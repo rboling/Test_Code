@@ -1,0 +1,34 @@
+<div class="action_bar">
+  <div class="container">
+    <div class="buttons left">
+      <%= link_to("New Message", new_message_path, :class => "btn primary", :id => "new_message_button", "data-title" => "Send a message", :remote => true) %>
+    </div>
+    <div class="buttons right <%= @messages.size == 0 ? 'hide' : '' %>">
+<<<<<<< HEAD
+
+=======
+>>>>>>> dba2daa1c33654edab157efa7b93b3f153ca6e1e
+      <div class="default_message_buttons right">
+        <%= link_to "Filter", filter_messages_path(:link_id => "filter_message_button"), :class => "btn", :id => "filter_message_button", :remote => true %>
+        <% if params[:mailbox] == "inbox" %>
+          <%= link_to "Archive", mailbox_path(mailbox: "archive"), :class => "btn" %>
+        <% else %>
+          <%= link_to "Inbox", mailbox_path(mailbox: "inbox"), :class => "btn" %>
+        <% end %>
+        <%= link_to "Edit", "#", :class => "edit btn" %>
+      </div>
+      <div class="edit_message_buttons right hide">
+<<<<<<< HEAD
+        <%# = select_tag nil, options_for_select(message_edit_options, message_edit_options[0][0].to_s), :id => 'select_action', :class => 'chzn-select', :selected => message_edit_options[0][0].to_s %>
+        <%= select_tag nil, options_for_select([["Select your action",""]] + message_edit_options.to_a, message_edit_options[0][0]), :id => 'select_action', :class => 'chzn-select'%>
+=======
+        <%= select_tag nil, options_for_select(message_edit_options), :id => 'select_action', :class => 'chzn-select' %>
+>>>>>>> dba2daa1c33654edab157efa7b93b3f153ca6e1e
+        <%= link_to "Select All", "#", :class => "select_all btn"%>
+        <%= link_to "Select None", "#", :class => "select_none btn hide"%>
+        <%= link_to "Cancel", "#", :class => "cancel btn"%>
+      </div>
+    </div>
+    <h3><%= mailbox_title %></h3>
+  </div>
+</div>

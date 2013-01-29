@@ -1,0 +1,38 @@
+<div id="class_title" style="width: 270px"><input value="<%= @course.title %>" type="text" name="class_title" id="class_title" style="width:250px"/></div>
+
+<div><%= link_to "Submit", '#', :class => 'update_title' %></div>
+
+<script type="text/javascript">
+
+$(document).ready(function(){ 
+	$('.update_title').live('click', function(event) {
+		event.preventDefault();
+		var form_data = new FormData();
+		form_data.append("class[title]", $('input#class_title').val());
+		 $.ajax({
+			type: "PUT",
+			processData: false,
+			contentType: false,
+			data: form_data,
+			url: "/classes/" + "<%=j @course.id.to_s %>"
+		}).done(function( data ) {
+			$('div.class_subheader').html(data);
+			$('h3').html(data);
+			var popover_attribute = {
+		      trigger: "manual",
+		      placement: 'below-right',
+		      offset: 0,
+		      html: true,
+		      title: function(){return "Thanks!";},
+		      content: function(){ return "We really appreciate your help in assuring we have the most accurate course information";}
+		    };
+
+			$('div.class_subheader').popover(popover_attribute);
+			$('div.class_subheader').popover("show");
+			setTimeout(function() {$('div.class_subheader').popover('hide'); $('.popover').remove();}, 1000);
+		});
+	});
+	
+});
+
+</script>

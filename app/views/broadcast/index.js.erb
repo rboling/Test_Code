@@ -1,0 +1,12 @@
+var button = $("#<%= j @link_id %>");
+button.popover({
+  trigger: "manual",
+  placement: "below-left",
+  offset: 10,
+  horizontalOffset: 25,
+  html: true,
+  id: "broadcast_popover_new",
+  title: function(){return "Notifications";},
+  content: function(){return "<%=j render :partial => 'list' %>";}
+});
+button.popover("show");

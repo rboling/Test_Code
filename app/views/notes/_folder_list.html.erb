@@ -1,0 +1,34 @@
+<% if note_items.any? %>
+  <!--<div class="scroll_pane">-->
+    <ul class="folder_list scrollPane" data-layout="grid">
+      <%= render partial: "shared/note_item", collection: note_items, as: :note_item %>
+    </ul>
+  <!--</div>-->
+<% elsif params[:filter] %>
+  <div class="note_item_demo">
+      <center>
+        <h3 class="title">No Results Found!</h3>
+        Sorry, we can't find any Notes or Notebooks meeting that criteria.
+      </center>
+  </div>
+<% else %>
+
+<div class="landing_wrapper">
+  <div class="note_item_demo">
+  <%= link_to "Upload     Documents", '', 
+  :onclick => 'javascript:window.location.href = "/uploads"; 	return false;', class: "name upload_trig" %>
+
+      <!--<a class="name upload_trig" href="/notes">Upload<br />Documents</a>-->
+  </div>
+  <h3><b>Upload</b> your notes, articles/research, exams, problem sets, and more.  <b>Share</b> with your classmates and get the help <b>you need.</b></h3>
+</div>
+
+<% end %>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  $(".upload_trig").on("click", function() {
+    $("#upload_note_button").click();
+  });
+});
+</script>

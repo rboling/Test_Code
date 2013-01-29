@@ -1,0 +1,47 @@
+<div class="clearfix">
+  <div class="input">
+    <div class="input-prepend">
+      <label class="add-on">
+        <%= f.check_box :share_choice, checked: false, class: "activation_check_box", :id => "doc_format_field", id: "privacy_select_check_box" %>
+      </label>
+      <%= text_field_tag nil, nil, value: "Share with select groups and buddies", class: "prepended_checkbox disabled", disabled: true %>
+    </div>
+  </div>
+  <div class="select_share">
+    <%= link_to "Select groups", "#", :class => "btn", :id => "select_groups_button", :disabled => true, :style => "display:none" %>
+  </div>
+</div>
+
+<div id="view_all_buddies" class="modal" style="display:none">
+  <div class="modal-header">
+    <h3>Groups</h3>
+  </div>
+  <div class="modal-body">
+    <ul style="height:300px">
+      <% current_user.groups.each do |group| %>
+        <li class="clearfix buddy_list_item <%= cycle('odd','') %> " style="width:400px">
+          <div class="left">
+            <div class="checker">
+              <%= check_box_tag nil, group.id, false, :id => "group_check_box#{group.id}" %>
+            </div>
+            <div class="photo">
+              <%= link_to image_tag(group.photo_url(:medium)), group, :title => group.group_name %>
+            </div>
+          </div>
+          <div class="left meta">
+            <%= link_to group.group_name, group %>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn cancel_modal">Close</a>
+  </div>
+</div>
+
+<div id="select_groups_hidden" style="display:none">
+  <% current_user.groups.each do |group| %>
+    <%= check_box_tag "note[group_ids][]", group.id, false, :id => "group_check_box_hidden#{group.id}" %>
+  <% end %>
+</div>

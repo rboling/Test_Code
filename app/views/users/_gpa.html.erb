@@ -1,0 +1,59 @@
+
+<% if @user.id == current_user.id %>
+  <div id="gpa_section" class="rating_block gpa left editable" data-placement="below-left" data-title="Your GPA <small>4.1? Really?</small>" data-form="gpa_form" data-bar-title="Add your GPA - honest values equal better study buddies">
+    <div class="gpa_score"><%= user.gpa || ":)" %></div>
+    <span>GPA</span>
+      <%= link_to "", "", :class => "help", :title => gpa_help_text %>
+  </div>
+<% elsif @user.friend_with?current_user %>
+   <h2 style ="position:relative;top: 110px;z-index: 2;right: -7px;color:#707070"><b><%= "BUDDIED!"%></b></h2>
+   <div style="opacity:0.2;
+    filter: alpha(opacity=20);background-color: #000;">
+   <div style="width:140px;margin:0px;float:left" >
+    <canvas id="test_custom" width="130" height="130"></canvas>
+   </div>
+    <script type="text/javascript">
+  options = {
+					  value:10,
+					  label: 'Buddy Index',
+					  min: 0,
+					  max: 10,
+					  colorOfFill: [ '#ccc', '#fff', '#ddd', '#eee' ],
+					  colorOfPointerStroke: "#000",
+            colorOfPointerFill: "#000",
+            colorOfCenterCircleFill: 'rgba(211, 211, 211, 1)',
+            colorOfCenterCircleStroke: 'rgba(180, 180, 180, 1)',
+					  bands: [
+						  { color: '#cccc00', from: 0, to: 3.3 },
+						  { color: '#99cc00', from: 3.3, to: 6.6 },
+						  { color: '#009933', from: 6.6, to: 10 }
+					  ]
+				  };
+				  new Gauge( document.getElementById( 'test_custom'), options );
+  </script>
+   </div>
+<% elsif @user.school.users.find_by_id(current_user.id).nil? %>
+<% else %>
+  <div style="width:140px;margin:0px;float:left" >
+    <canvas id="test_custom" width="130" height="130"></canvas>
+  </div>
+    <script type="text/javascript">
+  options = {
+					  value: <%= Recommendation.find_scaled_rank(current_user.id,@user.id,9) || ":)" %>,
+					  label: 'Buddy Index',
+					  min: 0,
+					  max: 10,
+					  colorOfFill: [ '#ccc', '#fff', '#ddd', '#eee' ],
+					  colorOfPointerStroke: "#000",
+            colorOfPointerFill: "#000",
+            colorOfCenterCircleFill: 'rgba(211, 211, 211, 1)',
+            colorOfCenterCircleStroke: 'rgba(180, 180, 180, 1)',
+					  bands: [
+						  { color: '#cccc00', from: 0, to: 3.3 },
+						  { color: '#99cc00', from: 3.3, to: 6.6 },
+						  { color: '#009933', from: 6.6, to: 10 }
+					  ]
+				  };
+				  new Gauge( document.getElementById( 'test_custom'), options );
+  </script>
+<% end %>  

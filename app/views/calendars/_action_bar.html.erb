@@ -1,0 +1,12 @@
+<div class="action_bar">
+  <div class="container">
+      <div class="buttons left">
+        <div class="btn link_google_cal">Sync <%= image_tag "google.png", :width => "40px", :style => "top: -10px; margin: 0 3px 0 3px;" %> Calendar</div>
+      </div>
+      <h3 class="edit">Drag a study session to reschedule.</h3>
+      <div class="buttons right">
+	<%= link_to "Schedule A Studyhall", new_study_session_path(:link_id => "new_calendar_button", :calendar => "true"), :class => "btn popover_button non_edit", :id => "new_calendar_button", :remote => true %>
+        <%= link_to "Print", '', :onclick => 'javascript:print(); return false;', class: 'btn' %>
+      </div>
+  </div>
+</div>

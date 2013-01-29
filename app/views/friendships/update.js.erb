@@ -1,0 +1,16 @@
+/* replace the friend request section where it said confirm or reject to nothing*/
+
+$("span#friend_request").html(' ');// hides the confirm and request button
+var popover_attr = {
+  trigger: "manual",
+  placement: "below-right",
+  offset: 36,
+  html: true,
+  title: function(){return "Congrats!";},
+  content: function(){return " \t You and <%= escape_javascript(@inviter.first_name) %> are now friends!";}
+};
+
+$("span#friend_request").popover(popover_attr);// initiates the popover with the above options
+$("span#friend_request").popover("show");// displays the popover
+$('div.inner').addClass('friend_request');//this is so the stylistic changes (width and text-align) don't mess with the other popovers on the users#show
+$('div.popover').delay(1500).fadeOut(600);// hides the popover

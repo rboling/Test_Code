@@ -1,0 +1,5 @@
+<%= render :partial =>'sort_form', :locals => {:type => 'user', :keywords => @search.keywords}%>
+<% @search.users(params[:page] || 1).results.each do |search_result| %>
+  <%= render :partial => "person", :locals => {:user => search_result} %>
+<% end %>
+<%= paginate @search.users(params[:page] || 1).results, remote: true, params: { category: "users"} %>

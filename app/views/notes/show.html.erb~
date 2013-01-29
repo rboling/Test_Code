@@ -1,0 +1,40 @@
+<script type="text/javascript">
+$(document).ready(function(){
+  var edit_drop = $('#edit_drop');
+  edit_drop.popover({
+    trigger: "manual",
+    placement: "below-left",
+    offset: 10,
+    horizontalOffset: 25,
+    html: true,
+    title: function(){return "<%=j render :partial => 'share_popover' %>";},
+    content: function(){return ;}
+  });
+  edit_drop.bind('click', function(e) {
+    e.preventDefault();
+    $(this).popover('show');
+  });
+});
+</script>
+<div id="menubar" class="topbar notes">
+  <div class="right">
+    <% if current_user.can_edit?(@note) %>
+      <%= link_to "Delete", delete_note_path(@note), method: :get, class: "btn", remote: true, id: "delete_button" %>
+      <%= link_to "Share", edit_permission_setting_path(@note.permission_setting.id), id: "share_button", :class => "btn primary edit_button action_button" %>
+
+    <% end %>
+    <a id="edit_drop" class="btn">Edit</a>
+  </div>
+  <div class="left">
+    <%= link_to "Back", edit_note_back_path, :class => "btn" %>
+  <% if current_user.can_edit?(@note) %>
+    <%= link_to content_tag(:span, 'Study with this note'), {:controller => :study_sessions, :action => :direct, :note_id => @note.id}, :class => "btn primary popover_button non_edit", :id => "invite_study_session_button" %>
+  <% end %>
+  </div>
+  <div class="middle">
+    <%= truncate @note.name, :length => 70 %>
+  </div>
+</div>
+<div class="container">
+  <div id="note_content"><%= h @note.content %></div>
+</div>

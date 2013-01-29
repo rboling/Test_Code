@@ -1,0 +1,72 @@
+# -*- coding: utf-8 -*-
+# Stuff we can expect from Facebook: 
+# <OmniAuth::AuthHash::InfoHash 
+#   email="jackson_peter@me.com" 
+#   first_name="Pete" 
+#   image="http://graph.facebook.com/1312502783/picture?type=square"
+#   last_name="Jackson" 
+#   name="Pete Jackson" 
+#   nickname="jackson.peter" 
+#   urls=#<Hashie::Mash Facebook="http://www.facebook.com/jackson.peter">> 
+#   provider="facebook" 
+#   uid="1312502783">
+#
+class AuthenticationsController < ApplicationController
+  #before_filter :require_user, only: [:index, :destroy]
+<<<<<<< HEAD
+  skip_before_filter :require_not_new_user
+=======
+  skip_before_filter :require_first_last_name
+>>>>>>> staging
+  
+  def index
+    @user = current_user if current_user
+    @authentications = current_user.authentications if current_user
+  end
+
+  def create
+    omniauth = request.env["omniauth.auth"]
+    current_user.omniauth_facebook_token = omniauth.credentials.token
+    current_user.save
+    authentication = Authentication.find_by_provider_and_uid(omniauth['provider'], omniauth['uid'])
+   # Rails.logger.info(omniauth["credentials"])
+    if authentication && authentication.user.present?         # Authentication already exists, Sign In & Redirect
+        flash[:notice] = "Authentication successful."
+        session[:ep_sessions] = {}
+        UserSession.create(authentication.user, false)
+        redirect_to ('/home')#authentication.user
+        
+    elsif current_user                                        # User is logged in, add authentication & proceed
+      current_user.share_signin
+      Rails.logger.info("\n\n\n\n\n\n#{current_user.facebook}\n\n\n\n\n\n")
+      current_user.authentications.create(provider: omniauth['provider'], uid: omniauth['uid'])
+      current_user.apply_omniauth(omniauth)
+      flash[:notice] = "You have successfully signed up with your #{omniauth['provider'].titleize} account."
+      if current_user.majors.blank?
+        current_user.new = false
+        redirect_to custom_user_path(current_user.custom_url, :tour => true)
+      else
+      redirect_to authentications_path
+      end
+      
+    else
+      flash[:notice] = "Sorry we couldn't find your registration. Please sign up to get access!"
+      redirect_to ('/user_sessions/new')
+    end
+  end
+
+  def destroy
+    current_user.authentications.find(params[:id]).destroy
+    redirect_to authentications_url, notice: 'Authentication has been deleted!'
+  end
+
+  protected
+
+  # This is necessary since Rails 3.0.4
+  # See https://github.com/intridea/omniauth/issues/185
+  # and http://www.arailsdemo.com/posts/44
+  def handle_unverified_request
+    true
+  end
+  
+end

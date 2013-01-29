@@ -1,0 +1,2 @@
+class ActivityResponseController < ApplicationController
+end

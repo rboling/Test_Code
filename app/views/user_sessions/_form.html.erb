@@ -1,0 +1,10 @@
+<%= form_for @user_session, :url => {:controller => 'user_sessions', :action => "create"}, :html => {:class => "form-stacked"} do |f| %>
+  <%= f.error_messages %>
+  <div class="clearfix">
+    <div class="input" id="email"><%= f.text_field :email, :placeholder => 'Email' %></div>
+  </div>
+  <div class="clearfix" id="password">
+    <div class="input left"><%= f.password_field :password, :placeholder => 'Password' %></div>
+    <%= f.submit "Login", :id => 'login_btn ', :class => "btn primary right", :style => 'height:22px;padding:3px 7px' %>
+  </div>
+<% end %>

@@ -1,0 +1,10 @@
+<%= form_tag({:controller => "searches", :action => "sort"}, :remote => true) do %>
+  <%= hidden_field_tag 'keywords', @keywords %>
+  <%= hidden_field_tag 'type', 'user' %>
+    <%= select_tag "u_options", options_for_select([["Last name","name"],["School","school"],["Major","major"],["Grad year","year"],["Rating","rating"]], ["Last name","name"]) %>
+  <%= submit_tag "Sort", :class => "btn primary"%>
+<% end %>
+<% @search.results.each do |search_result| %>
+  <%= render :partial => "person", :locals => {:user => search_result} %>
+<% end %>
+<%= paginate @search.results, :remote => true%>

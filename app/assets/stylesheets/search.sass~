@@ -1,0 +1,164 @@
+@import "preboot.sass"
+
+// .tabs
+//   li
+//     a:hover
+//       background: #EEE
+//     &.active
+//       a:hover
+//         background: transparent
+//         border-bottom: 0 
+.hidden
+  display: none 
+h6
+  font-size: 1.3em
+.tabs.categories
+  li
+    background: $silverDark
+    a
+      padding: 4px 6px
+      color: $silverDisabledText
+    &.active
+      background: $blueDisabled
+      a
+        color: $blueDisabledText
+      
+.search_results
+  h3,h5
+    margin-bottom: 0px
+  label
+    margin-bottom: 2px
+    margin-right: 2px
+    text-align: left
+    height: 30px
+    white-space: nowrap
+  list-style: none
+  a.more_results
+    display: block
+    width: 700px
+    margin: 0 auto
+    padding: 15px 0
+    border: 1px solid $blockBlueBorder
+    color: $headings
+    background-color: $blockBlue
+    text-align: center
+    +border-radius(3px)
+
+  &.courses
+    float: none
+    width: auto
+    div
+      height: 70px
+    .course
+      border-bottom: 1px dashed #CCC
+      margin-bottom: 15px
+      dl
+        padding-right: 15px
+        float: left
+        width: 200px
+        margin-bottom: 0px
+        dd
+          margin: 0px
+          ul
+            margin: 0px
+      li
+        display: inline
+        background: #EEE
+        padding: 3px
+        margin: 2px
+  &.notes
+    float: none
+    width: auto
+    .note
+      p
+        margin: 0px
+      div
+        height: 70px
+        margin-bottom: 0px
+      border-bottom: 1px dashed #CCC
+      margin-bottom: 15px
+      dl
+        padding-right: 15px
+        float: left
+        width: 200px
+        margin-bottom: 0px
+        dd
+          margin: 0px
+          ul
+            margin: 0px
+      li
+        display: inline
+        background: #EEE
+        padding: 3px
+        margin: 2px
+        .note_content
+          padding: 0 10px
+          opacity: .9
+          overflow-y: hidden
+  .group
+    float: none
+    width: auto
+    .main_info
+      float: left
+      width: 300px
+      height: 50px
+    .avatar
+      float: left
+      padding-right: 30px
+    p
+      margin: 0px
+    div
+      height: 70px
+    div.clearfix
+      height: 40px
+    border-bottom: 1px dashed #CCC
+    margin-bottom: 15px
+    dl
+      padding-right: 15px
+      float: left
+      width: 200px
+      margin-bottom: 0px
+      dd
+        margin: 0px
+        ul
+          margin: 0px
+    li
+      display: inline
+      background: #EEE
+      padding: 3px
+      margin: 2px
+      
+  &.people
+    .person
+      border-bottom: 1px dashed #CCC
+      margin-bottom: 15px
+      label
+        margin-left: 15px
+      div
+        height: 70px
+      div.clearfix
+        height: 60px
+      a.avatar
+        float: left
+      .hidden
+        display: none
+      h3
+        margin-left: 65px
+        margin-bottom: 5px
+      dl
+        display: inline
+        width: 400px
+        float: left
+        margin-bottom: 0px
+        &.narrow
+          margin-left: 15px
+          width: 200px
+
+.searches-show
+  .main-content
+    form.new_search
+      input[type='text']
+        width: 320px
+        margin-bottom: 10px
+      label
+        float: none

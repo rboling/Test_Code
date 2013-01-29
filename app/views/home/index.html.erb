@@ -1,0 +1,497 @@
+
+<% content_for :head do %>
+  <%= tag :meta, property: "fb:app_id", content: APP_CONFIG['facebook']['app_id'] %>
+  <%= tag :meta, property: "og:site_name", content: "StudyHall Staging" %>
+  <%= tag :meta, property: "og:type", content: "studyhallsessiontest:signup" %>
+  <%= tag :meta, property: "og:title", content: "Signup" %>
+  <%= tag :meta, property: "og:url", content: "#{root_url}" %>
+  <%= tag :meta, property: "og:image", content: '/assets/futuristic.jpg' %>
+  <%= tag :meta, property: "og:description", content: "signup for StudyHall" %>
+<% end %>
+<%= render 'shared/invite_buddies'%>
+<%#= link_to "Invite Your Friends", '#', :id => "invite_buddies", :style => 'float:right; margin-top:40px; margin-right:75px' %>
+<% if flash[:notice] %>
+<div class="dashboard-alert">
+    <div class="alert alert-message success span7">
+        <a class="close" href="#">×</a>
+        <%= flash[:notice] %>
+        <%= link_to "Complete Your Profile", custom_user_path(current_user.custom_url, :completion => true) unless current_user.try(:profile_complete?) %>
+    </div>
+</div>
+<% else %>
+<% end %>
+<header class="home-header">
+  <div class="user_greeting span4">
+    <%= link_to (image_tag @current_user.avatar_url("medium")), @current_user %>
+	<%#= image_tag ('generic_avatar_medium.jpg')%> <!--this is solely for display when the user.image isn't working-->
+    <h3>Hi, 
+    <%= link_to @current_user.first_name, @current_user %>!
+    </h3>
+  </div>
+	<div class="links-holder">
+	  <div class="row">
+		  <div class="standard_actions tourable" data-popover-id="standard_actions_tour">
+	    <%= link_to content_tag(:span, 'Start a Studyhall'), {:controller => :study_sessions, :action => :direct}, :id => "invite_study_session_button", :class => "btn primary large popover_button" %>
+	    <%= link_to content_tag(:span, "Upload A Document"), '/uploads', :class => "btn primary", :id => "upload_note_button" %>
+	    <%= link_to content_tag(:span, "Take Notes"), new_note_path, :class => "btn primary" %>
+		  </div>
+	  </div>
+	</div>
+</header>
+<div class="sidebar">
+  <!--<div id='dummy-maine' style='height: 810px;width: 1296px;position: absolute;'></div>-->
+  
+  <section class="courses">
+		<div class="heading">
+		    <h5>Your Courses</h5>
+		</div>
+	    <ol class="course_list">
+	      <%= render partial: 'users/course_list', collection: current_user.offerings, as: :offering, :locals => {:wrapper_class => "wrapper_large"} %>
+	      <li class="add">
+	        <%= link_to "#", :id => "add_course_button" do %>
+	          <span>Add a Course</span>
+	        <% end %>
+	      </li>
+	    </ol>
+   </section>
+</div>
+<div class="main_content">
+	
+	<%= render :partial => "shared/buddies_preview", :locals => {:user => @current_user} %>
+	<%= render partial: "shared/groups", locals: {user: @current_user} %>
+  <div id="home_tabs" style="display:block;">
+    <ul id="activities">
+      <div id="activity_form_home">
+      <%= render :partial => 'form', :locals => {:user => current_user}%>
+      </div>
+      <div id="activity_here">
+          <%= render :partial => 'users/list_item' %>
+      </div>
+    </ul>
+  </div>
+</div>
+<%#= render :partial => 'tour' if @tour %>
+
+<div class="tour_popover" id="invitation_tour" data-title="Invite Buddies <small>We promise not to spam</small>" style="display: none;">
+  <%= render :partial => 'shared/invite_buddies_popover', :locals => { :user => current_user } if @tour %>
+</div>
+<div class="tourable" data-popover-id="concluding_tour" >
+</div>
+<% unless @tour %>
+  <script type="text/javascript">
+    $(function(){
+      $(".activate_invitation").click(function(){
+        var invitation_tour = $("#invitation_tour").clone();
+        invitation_tour.find("#gmail_invite_modal").remove()
+        invitation_tour.find("#facebook_connect_modal").remove()
+        invitation_tour.find(".popover-footer div.input").removeClass("input");
+        invitation_tour.find("input.save").live('click', function(){
+          $(".activate_invitation").popover('hide');
+        });
+        $(this).popover({trigger: "manual",
+                          placement: 'below-right',
+                          html: true,
+                          offset: 5,
+                          horizontalOffset: 110,
+                          title: function(){return invitation_tour.data('title');},
+                          content: function(){ return invitation_tour.html(); }});
+        $(this).popover("show");
+      });
+    });
+  </script>
+<% end %>
+
+
+
+<div id="course_select_container" style="display:none;">
+  <%= render :partial => 'classes/form' %>
+</div>
+
+<div id="textbook_modal" class="modal" style="display:none; width: 300px;"></div>
+
+
+<script type="text/javascript">
+	$("#invite_some").css({'margin-top' : '83px', 'float' : 'right', 'width' : '200px'});
+  $(document).ready(function(){
+	$('#invite_buddies').live('click', function(){
+		var popover_attributes = {
+	      trigger: "manual",
+	      placement: "below-left",
+	      offset: 10,
+	      horizontalOffset: 25,
+	      html: true,
+	      title: function(){return "Invite Your Friends!";},
+	      content: function(){ return "<%=j render :partial => 'shared/invite_buddies_popover'%>";}
+	    };
+		$(this).popover(popover_attributes);
+		$(this).popover('show');
+	});
+
+    var placement = "right";
+    var length = $('.course_list').children().length;
+    var bottom_size = length % 4;
+    if(bottom_size == 1){ placement = "right"; }else{ placement = "right"; }
+    
+    var course_select_content = $("#course_select_container").clone();
+    var popover_attr = {
+      trigger: "manual",
+      placement: placement,
+      offset: 10,
+      horizontalOffset: 25,
+      html: true,
+      title: function(){return "Add Your Course";},
+      content: function(){return course_select_content.html();}
+    };
+
+    
+    $("#add_course_button").live('click', function(){
+      $("#add_course_button").popover(popover_attr);
+      $("#add_course_button").popover("show");
+      $("select.chzn-select").chosen();
+      styleFileInputs();
+      $("#new_class_post .fake-file").css({position: "relative", top: "-34px"});
+      initWindowResize();
+      return false;
+    });
+    
+    $('a.cancel_course_popover').live('click', function(){
+	  $('.twipsy').hide();
+      $("#add_course_button").popover("hide");
+      return false;
+    });
+    
+	/* reacts to user choosing department for course */
+    var top_choice;
+    $('#.dept_choose .chzn-results li:not(.no_click)').live('click', function(){
+      top_choice = $('#class_department_chzn a span');
+	  $('.twipsy').hide();
+      $.get('/classes/show',
+        { dept_name: top_choice.html(), next: 'number_select'},
+        function(data){
+          $('.number_choose').html('<select id="class_number" name="class[number][]" style="width: 130px; visibility:hidden;"></select>');
+		  if (data == ''){
+			$('#class_number').html('<option>No Course Numbers Yet</option>');
+		  }
+		  else{
+          	$('#class_number').html( data );
+			$('#class_number').prepend('<option class="no_click" style="color:#999">Course No.</option>');
+		  }
+		  $('#class_number').css('visibility','visible').addClass('chzn-select').chosen();
+		  $('#course_not_here').removeClass('hidden');
+      });
+    });
+
+	/* reacts to user choosing number for course */
+    var second_choice;
+	var variable;
+    var data_split;
+    var is_text = false;
+    $('#.number_choose .chzn-results li:not(.no_click)').live('click', function(){
+      second_choice = $('#class_number_chzn a span');
+	  $('.twipsy').hide();
+      $.get('/classes/show',
+        { dept_name: top_choice.html(), number: second_choice.html(), next: "prof_select" },
+        function(data){
+		  $('tr.prof_section').css('display', 'inline-block');
+		  $('.prof_choose').html('<select id="prof_number" name="prof[number][]" style="width: 180px; visibility:hidden;"></select>');
+	      $('#prof_number').html( data );
+		  $('#prof_number').prepend('<option class="no_click" style="color:#999">Professor Name</option>');
+		  $('#prof_number').addClass('chzn-select').chosen();
+      });
+    });
+
+	/* reacts to user clicking 'course not here' link */
+	/* data needs to be the department selected */
+	$('#new_course').live('click', function(event){
+		event.preventDefault();
+		$('.twipsy').hide();
+		$.get('/classes/show',
+		{ dept_name: top_choice.html(), new_course: "true", next: "add_course"},
+		function(data){
+			$('.course_label').html(" ");
+			$('#add_dept_here').html( data );
+			$('#dept_num_table').fadeOut();
+			$('#new_course_partial').fadeIn();
+			$('.submit').addClass('hidden');
+			$('.continue').removeClass('hidden');
+		}
+		);
+	});
+	
+	/* reacts to user selecting 'professor last name' */
+	$('#.prof_last_choose .chzn-results li:not(.no_click)').live('click', function(event){
+		event.preventDefault();
+		$('.twipsy').hide();
+		var professor = $('#prof_last_number_chzn a span');
+		$.get('/classes/show',
+		{ dept_name: top_choice.html(), prof_last: professor.html(), next: "add_prof_first"},
+		function(data){
+			$('.prof_first_choose').html('<select id="prof_first_number" name="prof_first[number][]" style="width: 130px; visibility:hidden;">Professor First Name</select>');
+		    $('#prof_first_number').html( data );
+			$('#prof_first_number').prepend('<option class="no_click" style="color:#999">First Name</option>');
+			$('#prof_first_number').css('visibility','visible').addClass('chzn-select').chosen();
+		}
+		);
+	});
+	
+	/* reacts to user selecting 'professor first name' */
+	/* the data must be dept - num title */
+	$('#.prof_first_choose .chzn-results li:not(.no_click)').live('click', function(event){
+		event.preventDefault();
+		$('.twipsy').hide();
+		if (!$('input#class_number').val()) {
+			number = second_choice.html();
+		}else {
+			number = $('input#class_number').val();
+		}
+		if (typeof title === 'undefined'){
+		var title = $('input#class_title').val() }
+		$.get('/classes/show',
+		{ dept_name: top_choice.html(), number: number, title: title},
+		function(data){
+			$('#add_professor_partial').fadeOut();
+			$('#calendar_partial').fadeIn();
+			$('.submit').addClass('add_course_final');
+			$('.add_course_final').removeClass('submit');
+			$('.course_label').html( data ).css('text-align','center');
+		}
+		);
+	});
+	
+	
+	/* reacts to user clicking 'professor not here' link */
+	/* the data must be dept - num title */
+	$('#new_offering').live('click', function(event){
+		event.preventDefault();
+		$.get('/classes/show',
+		{ dept_name: top_choice.html(), next: "add_prof_last"},
+		function(data){
+			$('.twipsy').hide();
+			$('.course_label').html(" ");
+			$('.prof_last_choose').html('<select id="prof_last_number" name="prof_last[number][]" style="width: 150px; visibility:hidden;">Professor Last Name</select>');
+		    $('#prof_last_number').html( data );
+			$('#prof_last_number').prepend('<option class="not_click" style="color:#999">Last Name</option>');
+			$('#prof_last_number').css('visibility','visible').addClass('chzn-select').chosen();
+			//$('.course_label').html( data ).css('text-align','center');
+			$('#dept_num_table').fadeOut();
+			$('#add_professor_partial').fadeIn();
+		}
+		);
+	});
+	
+	/* reacts to user prematurely clicking submit */
+	$('.submit').live('click', function(event){
+		$(".submit")
+	      .attr('title',"You're not ready to submit. Please finish filling out course fields." )
+	      .twipsy({placement: "below", trigger: "manual", animate: false, offset: 10})
+	      .twipsy("show");
+		  $('.twipsy-inner').css('background-color', '#F1716E');
+		  setTimeout(function() {$('.twipsy').hide();}, 5000);
+	});
+
+	/* reacts to user clicking continue after adding a new course */
+	$('.continue').live('click', function(event){
+		event.preventDefault();
+		$('#add_course_form').validate({
+			rules: {
+				class_title: "required",
+				class_number: {
+					maxlength: 4,
+					minlength: 3,
+					digits: true,
+					required: true
+				}		
+			}
+		});
+		valid = $("#add_course_form").valid();
+		if(valid) {
+			var second_choice;
+			second_choice = $('input#class_number').val();
+			title = $('input#class_title').val();
+			$.get('/classes/show',
+			{ dept_name: top_choice.html(), number: second_choice, next: "add_prof_last"},
+			function(data){
+				$('.prof_last_choose').html('<select id="prof_last_number" name="prof_last[number][]" style="width: 150px; visibility:hidden;">Professor Last Name</select>');
+			    $('#prof_last_number').html( data );
+				$('#prof_last_number').prepend('<option class="no_click" style="color:#999">Last Name</option>');
+				$('#prof_last_number').css('visibility','visible').addClass('chzn-select').chosen();
+				//$('.course_label').html( data ).css('text-align','center');
+		          $('#new_course_partial').fadeOut();
+				$('#add_professor_partial').fadeIn();
+		          //$('#calendar_partial').fadeIn();
+				  $('.submit').removeClass('hidden');
+				  $('.continue').addClass('hidden');
+		    });
+		}
+	});
+	
+	/* reacts to user clicking continue after entering a new professor */
+	$('.add_new_prof').live('click', function(e){
+		e.preventDefault();
+		var number;
+		if (second_choice == undefined){
+			number = $('input#class_number').val();
+		}else{
+			number = second_choice.html();
+		}
+		title = $('input#class_title').val();
+		$.get('/classes/show',
+		{ dept_name: top_choice.html(), number: number, title: title},
+		function(data){
+		  $('.course_label').html( data ).css('text-align','center');
+		  $('.add_new_prof').addClass('hidden');
+		  $('.submit').removeClass('hidden');
+		  $('#select_prof_section').fadeOut();
+		  $('#add_db_prof_partial').fadeOut();
+		  $('#calendar_partial').fadeIn();
+		  $('.submit').addClass('add_course_final');
+		  $('.add_course_final').removeClass('submit');
+		});
+	});
+
+	/* reacts to a user choosing a professor (for a pre-existing offering)*/
+	$('#.prof_choose .chzn-results li:not(.no_click)').live('click', function(){
+		$.get('/classes/show',
+		{ dept_name: top_choice.html(), number: second_choice.html()},
+		function(data){
+			$('.twipsy').hide();
+			$('.course_label').html( data ).css('text-align','center');
+	          $('#dept_num_table').fadeOut();
+	          $('#calendar_partial').fadeIn();
+			  $('.submit').addClass('add_course_final');
+			  $('.add_course_final').removeClass('submit');
+	      }).done( function() {
+	        $.get('/textbooks/show',
+	          { dept_name: top_choice.html(), number: second_choice.html() },
+	          function(data){
+	            $("#textbook_modal").html('<div class="modal-header"><button class="close" data-dismiss="modal" style="background:none;">×</button><h3>Buy them books!</h3></div><div class="modal-body">' + data + '</div>' );
+	            if(data != "no_text"){ is_text = true; }
+	        });
+		  });
+	});
+	
+	function makeNewPopover() {
+	
+	var popover_attribute = {
+      trigger: "manual",
+      placement: 'below-right',
+      offset: -160,
+      html: true,
+      title: function(){return "You Must Verify This Course!";},
+      content: function(){ return "<%=j render :partial => 'classes/invite_classmates'%>";}
+    };
+	$("li.add").popover(popover_attribute);
+	$("li.add").popover("show");
+	$("select.chzn-select").chosen();
+	
+	}
+
+	
+    /* reacts to a user clicking submit */
+    $('.add_course_final').live('click', function(event){
+		event.preventDefault();
+		$(this).parent().parent().parent().parent().parent().hide();
+      if(is_text){
+        $("#textbook_modal").modal({ backdrop: true }).modal('show');
+      }
+	var form_data = new FormData();
+	$("#add_course_form select").each(function(){
+		form_data.append($(this).attr("name"), $(this).val());
+	});
+
+	form_data.append("prof[first]", $('input#new_prof_first').val());
+	form_data.append("prof[last]", $('input#new_prof_last').val());
+	form_data.append("class[department]", $('select#class_department').val());
+	form_data.append("class_title", $('input#class_title').val());
+	form_data.append("class_number", $('input#class_number').val());
+	  $.ajax({
+		type: "POST",
+		processData: false,
+		contentType: false,
+		data: form_data,
+		url: "/classes"
+	  }).done(function( data ) {
+		//alert(JSON.stringify(data, null, 4));
+		$('.popover').remove();
+		$('.course_list').html(data);
+	    $('.course_list').append("<li class='add'><a id='add_course_button' href='#' data-original-title=''><span>Add a course</span></a></li>");
+		makeNewPopover();
+	  });
+    });
+
+
+
+
+  var trigger_hide_modal = function() {
+    $("#view_all_buddies").modal('hide');
+  }
+  
+  });
+
+//(function() {
+//  var page = 1,
+//      loading = false;
+
+//  function nearBottomOfPage() {
+//    return $(window).scrollTop() > $(window).height();
+//  }
+
+//  $(window).scroll(function(){
+//    if (loading) {
+//      return;
+//    }
+
+//    if(nearBottomOfPage()) {
+//      loading=true;
+//      page++;
+//      $.ajax({
+//        url: '/home?page=' + page,
+//        type: 'get',
+//        dataType: 'script',
+//        success: function() {
+//          $(window).sausage('draw');
+//          loading=false;
+//        }
+//      });
+//    }
+//  });
+
+//  $(window).sausage();
+//}()); 
+
+//$("body").delegate("#reply-section", "click", function () {
+  //$reply_button = $(this).("#reply_button");
+  //if($(this).find("#reply_button").css("display") == 'inline')
+ // if ($(this).find("#reply_button").css("display") == 'block') {
+  //  $(this).find("#reply_button").css("display", "none");
+  //  $(this).html('<%=j link_to "Close", "#", :id => "close_button", :style => "display: block;" %>');
+  //  }
+  //else { 
+  //  $(this).find("#close_button").remove();
+  //  $(this).html('<%=j link_to "Reply", "#", :id => "reply_button" %>');
+  //  }    
+//});
+
+//$("body").delegate(".activity_message", "mouseover", function () {
+//  $reply_form = $(this).find("#reply_form");
+//  $close_button = $(this).find("#close_button");
+//  if ($close_button.css("display") == 'block'){
+//    $close_button.on("click", function () {
+//    alert($reply_form.css("display"));
+//    $reply_form.css("display", "none");
+//    });
+//  }
+//});  
+
+</script>
+
+<% if @tour == true %>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.modal').remove();
+	$('.popover').remove();
+	$('.modal-backdrop').remove()
+	$('#add_course_button').trigger('click');
+});
+</script>
+<% end %>

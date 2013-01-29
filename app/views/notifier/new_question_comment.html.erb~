@@ -1,0 +1,4 @@
+<p>
+<% puts "I am in the template now" %>
+hey dude 
+</p>
